@@ -1,0 +1,15 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Galeri - Ekstra Tari</title><link rel="stylesheet" href="/assets/css/style.css"></head><body><div class="container">
+  <header class="header"><div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Galeri Kegiatan</div><div style="font-size:12px;color:var(--muted)">Ekstra Tari</div></div></div><nav><ul><li><a href="index.html">Beranda</a></li><li><a href="galeri.html">Galeri</a></li></ul></nav><img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px"></header>
+  <section class="hero"><h1>Galeri Foto & Video</h1><p style="color:var(--muted)">Upload foto ke folder <code>/assets/img/kegiatan</code> lalu refresh halaman.</p>
+  <div class="cards" id="gallery"></div></section>
+  <footer class="footer"><div class="left"><strong>SDI Ulumiyah Al Makruf</strong></div><div class="social"><a href="index.html">Kembali</a></div></footer>
+</div>
+<script src="/assets/js/main.js"></script>
+<script>
+fetch('/assets/img/kegiatan').catch(()=>{}); // placeholder - static hosting cannot list files reliably
+// We'll show sample images if present
+const gallery = document.getElementById('gallery');
+const sample = ['/assets/img/logo-ekstra.png','/assets/img/logo-sekolah.jpg'];
+sample.forEach(s=>{ const d = document.createElement('div'); d.className='card'; d.innerHTML = `<img src="${s}" style="max-width:100%;border-radius:8px"><p style="margin-top:8px">Contoh Foto</p>`; gallery.appendChild(d); });
+</script>
+</body></html>

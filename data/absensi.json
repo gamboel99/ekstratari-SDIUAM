@@ -1,0 +1,36 @@
+{
+  "tahun": 2025,
+  "bulan": "September",
+  "pertemuan": [
+    {
+      "tanggal": "2025-09-06",
+      "hadir": [
+        "Alya",
+        "Bima",
+        "Sinta"
+      ],
+      "izin": [
+        "Rafi"
+      ],
+      "alpha": []
+    },
+    {
+      "tanggal": "2025-09-13",
+      "hadir": [
+        "Alya",
+        "Bima",
+        "Rafi"
+      ],
+      "izin": [],
+      "alpha": [
+        "Sinta"
+      ]
+    }
+  ],
+  "siswa": [
+    "Alya",
+    "Bima",
+    "Rafi",
+    "Sinta"
+  ]
+}

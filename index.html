@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ekstra Tari - SDI Ulumiyah Al Makruf</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Ekstra Tari</div><div style="font-size:12px;color:var(--muted)">SDI Ulumiyah Al Makruf</div></div></div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="galeri.html">Galeri</a></li>
+          <li><a href="rapor.html">Rapor</a></li>
+          <li><a href="materi.html">Materi</a></li>
+          <li><a href="absensi.html">Absensi</a></li>
+          <li><a href="kinerja.html">Kinerja</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </nav>
+      <img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
+    </header>
+
+    <section class="hero">
+      <h1>Wall Kegiatan — Tahun 2025</h1>
+      <p style="color:var(--muted);margin-top:6px">Informasi kegiatan, jadwal latihan, dan event penting selama setahun ke depan.</p>
+      <div class="cards" id="events-cards">
+        <!-- cards filled by JS -->
+      </div>
+    </section>
+
+    <section style="margin-top:16px" class="hero">
+      <h2>Quick Links</h2>
+      <div class="cards">
+        <div class="card"><h3>Absensi Mingguan</h3><p>Lihat & download absensi setiap bulan.</p><a href="absensi.html">Buka</a></div>
+        <div class="card"><h3>Rapor Prestasi</h3><p>Catatan prestasi murid & unduh rapor.</p><a href="rapor.html">Buka</a></div>
+        <div class="card"><h3>Materi & Target</h3><p>Silabus dan target pembelajaran.</p><a href="materi.html">Buka</a></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="left">
+        <strong>SDI Ulumiyah Al Makruf</strong>
+        <p>Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur</p>
+        <p>Email: sdiuam.almakruf@gmail.com | Web: sdiulumiyahalmakruf.vercel.app | Telp: 085859830350</p>
+      </div>
+      <div class="social">
+        <div><a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" target="_blank">Facebook</a></div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="/assets/js/main.js"></script>
+  <script>
+  fetch('/data/kegiatan.json').then(r=>r.json()).then(data=>{
+    const container = document.getElementById('events-cards');
+    data.events.forEach(ev=>{
+      const div = document.createElement('div'); div.className='card';
+      div.innerHTML = `<h3>${ev.judul}</h3><p>${ev.tanggal} — ${ev.deskripsi}</p>`;
+      container.appendChild(div);
+    });
+  });
+  </script>
+</body>
+</html>

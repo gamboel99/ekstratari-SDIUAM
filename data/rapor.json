@@ -1,0 +1,23 @@
+{
+  "tahun": 2025,
+  "siswa": [
+    {
+      "nama": "Alya",
+      "nilai": {
+        "teknik": 85,
+        "ekspresi": 90,
+        "kedisiplinan": 95
+      },
+      "catatan": "Perkembangan bagus"
+    },
+    {
+      "nama": "Bima",
+      "nilai": {
+        "teknik": 78,
+        "ekspresi": 80,
+        "kedisiplinan": 88
+      },
+      "catatan": "Perlu latihan dasar"
+    }
+  ]
+}

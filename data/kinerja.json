@@ -1,0 +1,20 @@
+{
+  "tahun": 2025,
+  "indikator": [
+    {
+      "nama": "Perencanaan RPP",
+      "skor": 4,
+      "keterangan": "Tersusun rapi"
+    },
+    {
+      "nama": "Pelaksanaan Pembelajaran",
+      "skor": 5,
+      "keterangan": "Interaktif"
+    },
+    {
+      "nama": "Evaluasi",
+      "skor": 4,
+      "keterangan": "Rutin dilakukan"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="id">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Absensi - Ekstra Tari</title><link rel="stylesheet" href="/assets/css/style.css"></head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Absensi</div><div style="font-size:12px;color:var(--muted)">Ekstra Tari</div></div></div>
+    <nav><ul><li><a href="index.html">Beranda</a></li><li><a href="absensi.html">Absensi</a></li><li><a href="rapor.html">Rapor</a></li></ul></nav>
+    <img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
+  </header>
+
+  <section class="hero">
+    <h1 id="absensi-title">Absensi</h1>
+    <p style="color:var(--muted)">Daftar kehadiran pertemuan (setiap Sabtu). Tombol download akan meng-export ke Excel.</p>
+    <div style="margin-top:12px;">
+      <table>
+        <thead><tr><th>Tanggal</th><th>Hadir</th><th>Izin</th><th>Alpha</th></tr></thead>
+        <tbody id="absensi-table-body"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px"><button onclick="downloadAbsensiExcel()">Download Excel</button></div>
+  </section>
+
+  <footer class="footer"><div class="left"><strong>SDI Ulumiyah Al Makruf</strong><p>Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri</p></div><div class="social"><a href="index.html">Kembali</a></div></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/absensi.js"></script>
+<script>loadAbsensi();</script>
+</body></html>
