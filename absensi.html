@@ -1,31 +1,60 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Absensi - Ekstra Tari</title><link rel="stylesheet" href="/assets/css/style.css"></head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absensi - Ekstra Tari</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/absensi.js"></script>
+</head>
 <body>
-<div class="container">
-  <header class="header">
-    <div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Absensi</div><div style="font-size:12px;color:var(--muted)">Ekstra Tari</div></div></div>
-    <nav><ul><li><a href="index.html">Beranda</a></li><li><a href="absensi.html">Absensi</a></li><li><a href="rapor.html">Rapor</a></li></ul></nav>
-    <img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
-  </header>
 
-  <section class="hero">
-    <h1 id="absensi-title">Absensi</h1>
-    <p style="color:var(--muted)">Daftar kehadiran pertemuan (setiap Sabtu). Tombol download akan meng-export ke Excel.</p>
-    <div style="margin-top:12px;">
-      <table>
-        <thead><tr><th>Tanggal</th><th>Hadir</th><th>Izin</th><th>Alpha</th></tr></thead>
-        <tbody id="absensi-table-body"></tbody>
-      </table>
-    </div>
-    <div style="margin-top:12px"><button onclick="downloadAbsensiExcel()">Download Excel</button></div>
-  </section>
+<header>
+  <img src="assets/img/logo-sekolah.png" alt="Logo Sekolah">
+  <h1>Ekstrakurikuler Tari SDI Ulumiyah Al Makruf</h1>
+  <img src="assets/img/logo-ekstra.png" alt="Logo Ekstra Tari">
+</header>
+<nav>
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="materi.html">Materi</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="kontak.html">Kontak</a>
+</nav>
 
-  <footer class="footer"><div class="left"><strong>SDI Ulumiyah Al Makruf</strong><p>Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri</p></div><div class="social"><a href="index.html">Kembali</a></div></footer>
-</div>
+<main>
+  <h2>Form Absensi Siswa</h2>
+  <form onsubmit="event.preventDefault(); tambahAbsensi();">
+    <label>Nama Siswa<input type="text" id="namaSiswa"></label>
+    <label>Tanggal<input type="date" id="tanggal"></label>
+    <label>Status
+      <select id="status">
+        <option value="Hadir">Hadir</option>
+        <option value="Izin">Izin</option>
+        <option value="Sakit">Sakit</option>
+      </select>
+    </label>
+    <button type="submit">Tambah</button>
+  </form>
+  <table id="absensiTable">
+    <tr><th>Nama</th><th>Tanggal</th><th>Status</th></tr>
+  </table>
+  <button onclick="exportAbsensi()">Download Excel</button>
+</main>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="/assets/js/main.js"></script>
-<script src="/assets/js/absensi.js"></script>
-<script>loadAbsensi();</script>
-</body></html>
+<footer>
+  <p>SDI Ulumiyah Al Makruf<br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kediri - Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)<br>
+  Website: <a href="https://sdiulumiyahalmakruf.vercel.app/">sdiulumiyahalmakruf.vercel.app</a></p>
+  <p>Ikuti kami:
+    <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank">YouTube</a> |
+    <a href="https://www.instagram.com/sdiulumiyahalmakruf/" target="_blank">Instagram</a> |
+    <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" target="_blank">Facebook</a>
+  </p>
+</footer>
+
+</body>
+</html>

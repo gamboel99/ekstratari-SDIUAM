@@ -1,25 +1,49 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kontak - Ekstra Tari</title><link rel="stylesheet" href="/assets/css/style.css"></head><body><div class="container">
-  <header class="header"><div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Kontak & Pengaduan</div><div style="font-size:12px;color:var(--muted)">Ekstra Tari</div></div></div><nav><ul><li><a href="index.html">Beranda</a></li><li><a href="kontak.html">Kontak</a></li></ul></nav><img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px"></header>
-  <section class="hero"><h1>Hubungi Kami</h1>
-    <p style="color:var(--muted)">Untuk pengaduan/saran, gunakan form di bawah. Form akan membuka aplikasi email Anda dengan tujuan ke <strong>mitrautamaconsultindo@gmail.com</strong>. Jika Anda ingin pengaduan langsung masuk inbox tanpa membuka email client, silakan siapkan Formspree/EmailJS dan ganti endpoint pada form.</p>
-    <form id="contact-form" onsubmit="sendMail(event)">
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><input required placeholder="Nama" name="name" style="padding:8px;border-radius:6px;border:1px solid #ddd"><input required placeholder="Email" name="email" style="padding:8px;border-radius:6px;border:1px solid #ddd"></div>
-      <div style="margin-top:8px"><textarea required name="message" placeholder="Pesan atau usulan" style="width:100%;min-height:120px;padding:8px;border-radius:6px;border:1px solid #ddd"></textarea></div>
-      <div style="margin-top:8px"><button type="submit">Kirim</button></div>
-    </form>
-  </section>
-  <footer class="footer"><div class="left"><strong>SDI Ulumiyah Al Makruf</strong><p>Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri</p></div><div class="social"><a href="index.html">Kembali</a></div></footer>
-</div>
-<script src="/assets/js/main.js"></script>
-<script>
-function sendMail(e){
-  e.preventDefault();
-  const f = e.target;
-  const name = encodeURIComponent(f.name.value);
-  const email = encodeURIComponent(f.email.value);
-  const message = encodeURIComponent(f.message.value);
-  const body = `Nama: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0A${message}`;
-  // open mail client as fallback
-  window.location.href = `mailto:mitrautamaconsultindo@gmail.com?subject=Pengaduan%20Ekstra%20Tari&body=${body}`;
-}
-</script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontak - Ekstra Tari</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header>
+  <img src="assets/img/logo-sekolah.png" alt="Logo Sekolah">
+  <h1>Ekstrakurikuler Tari SDI Ulumiyah Al Makruf</h1>
+  <img src="assets/img/logo-ekstra.png" alt="Logo Ekstra Tari">
+</header>
+<nav>
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="materi.html">Materi</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="kontak.html">Kontak</a>
+</nav>
+
+<main>
+  <h2>Kontak & Pengaduan</h2>
+  <form method="post" action="mailto:mitrautamaconsultindo@gmail.com" enctype="text/plain">
+    <label>Nama<input type="text" name="nama"></label>
+    <label>Email<input type="email" name="email"></label>
+    <label>Pesan<textarea name="pesan"></textarea></label>
+    <button type="submit">Kirim</button>
+  </form>
+</main>
+
+<footer>
+  <p>SDI Ulumiyah Al Makruf<br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kediri - Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)<br>
+  Website: <a href="https://sdiulumiyahalmakruf.vercel.app/">sdiulumiyahalmakruf.vercel.app</a></p>
+  <p>Ikuti kami:
+    <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank">YouTube</a> |
+    <a href="https://www.instagram.com/sdiulumiyahalmakruf/" target="_blank">Instagram</a> |
+    <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" target="_blank">Facebook</a>
+  </p>
+</footer>
+
+</body>
+</html>

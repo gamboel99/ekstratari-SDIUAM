@@ -1,26 +1,11 @@
 
-/* assets/js/kinerja.js */
-async function loadKinerja(){
-  const res = await fetch('/data/kinerja.json');
-  const data = await res.json();
-  document.getElementById('kinerja-year').textContent = data.tahun;
-  const tbody = document.getElementById('kinerja-body');
-  tbody.innerHTML='';
-  data.indikator.forEach(i=>{
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${i.nama}</td><td>${i.skor}</td><td>${i.keterangan}</td>`;
-    tbody.appendChild(tr);
-  });
+function tambahKinerja(){
+  const indikator = document.getElementById('indikator').value;
+  const catatan = document.getElementById('catatan').value;
+  if(!indikator) return alert("Lengkapi data!");
+  const table = document.getElementById('kinerjaTable');
+  const row = table.insertRow();
+  row.insertCell(0).innerText = indikator;
+  row.insertCell(1).innerText = catatan;
 }
-function downloadKinerjaExcel(){
-  fetch('/data/kinerja.json').then(r=>r.json()).then(data=>{
-    const rows=[['Indikator','Skor','Keterangan']];
-    data.indikator.forEach(i=> rows.push([i.nama,i.skor,i.keterangan]));
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.aoa_to_sheet(rows);
-    XLSX.utils.book_append_sheet(wb, ws, 'Kinerja');
-    XLSX.writeFile(wb, `kinerja-${data.tahun}.xlsx`);
-  });
-}
-window.loadKinerja = loadKinerja;
-window.downloadKinerjaExcel = downloadKinerjaExcel;
+function exportKinerja(){ alert("Export Kinerja ke Excel (SheetJS bisa ditambahkan)"); }

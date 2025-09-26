@@ -1,7 +1,53 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rapor - Ekstra Tari</title><link rel="stylesheet" href="/assets/css/style.css"></head><body><div class="container">
-  <header class="header"><div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Rapor Prestasi</div><div style="font-size:12px;color:var(--muted)">Ekstra Tari</div></div></div><nav><ul><li><a href="index.html">Beranda</a></li><li><a href="rapor.html">Rapor</a></li></ul></nav><img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px"></header>
-  <section class="hero"><h1>Rapor Prestasi</h1><p style="color:var(--muted)">Daftar prestasi murid dan catatan pembimbing.</p>
-  <table><thead><tr><th>Nama</th><th>Teknik</th><th>Ekspresi</th><th>Kedisiplinan</th><th>Catatan</th></tr></thead><tbody id="rapor-body"></tbody></table>
-  <div style="margin-top:12px"><button onclick="downloadRaporExcel()">Download Excel</button></div></section>
-  <footer class="footer"><div class="left"><strong>SDI Ulumiyah Al Makruf</strong></div><div class="social"><a href="index.html">Kembali</a></div></footer>
-</div><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="/assets/js/main.js"></script><script src="/assets/js/rapor.js"></script><script>loadRapor();</script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapor - Ekstra Tari</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/rapor.js"></script>
+</head>
+<body>
+
+<header>
+  <img src="assets/img/logo-sekolah.png" alt="Logo Sekolah">
+  <h1>Ekstrakurikuler Tari SDI Ulumiyah Al Makruf</h1>
+  <img src="assets/img/logo-ekstra.png" alt="Logo Ekstra Tari">
+</header>
+<nav>
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="materi.html">Materi</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="kontak.html">Kontak</a>
+</nav>
+
+<main>
+  <h2>Form Rapor Prestasi</h2>
+  <form onsubmit="event.preventDefault(); tambahRapor();">
+    <label>Nama Murid<input type="text" id="namaMurid"></label>
+    <label>Prestasi<textarea id="prestasi"></textarea></label>
+    <button type="submit">Tambah</button>
+  </form>
+  <table id="raporTable">
+    <tr><th>Nama</th><th>Prestasi</th></tr>
+  </table>
+  <button onclick="exportRapor()">Download Excel</button>
+</main>
+
+<footer>
+  <p>SDI Ulumiyah Al Makruf<br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kediri - Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)<br>
+  Website: <a href="https://sdiulumiyahalmakruf.vercel.app/">sdiulumiyahalmakruf.vercel.app</a></p>
+  <p>Ikuti kami:
+    <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank">YouTube</a> |
+    <a href="https://www.instagram.com/sdiulumiyahalmakruf/" target="_blank">Instagram</a> |
+    <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" target="_blank">Facebook</a>
+  </p>
+</footer>
+
+</body>
+</html>
