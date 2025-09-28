@@ -36,8 +36,8 @@
   <a href="admin.html">Admin</a>
 </div>
 
-<!-- Kontainer -->
 <div class="container">
+  <!-- Form Pendaftaran -->
   <div class="hero">
     <h1>Pendaftaran Siswa Baru</h1>
     <form id="formPendaftaran">
@@ -54,18 +54,19 @@
         <option value="Perempuan">Perempuan</option>
       </select>
       
-      <label>Nama Orang Tua / Wali</label>
+      <label>Nama Wali</label>
       <input type="text" id="wali" class="input" required>
       
-      <label>No. HP Orang Tua / Wali</label>
+      <label>Kontak Wali</label>
       <input type="text" id="kontak" class="input" required>
       
       <button type="submit" class="btn">Daftar</button>
     </form>
   </div>
 
+  <!-- Tabel Daftar Siswa -->
   <div class="hero">
-    <h2>Daftar Siswa Terdaftar</h2>
+    <h2>Daftar Siswa</h2>
     <div style="overflow-x:auto;">
       <table class="table">
         <thead>
@@ -76,6 +77,8 @@
             <th>Wali</th>
             <th>Kontak</th>
             <th>Status</th>
+            <th>Tgl Daftar</th>
+            <th>Tgl Keluar</th>
             <th>Aksi</th>
           </tr>
         </thead>
@@ -92,22 +95,19 @@
 <div class="footer">
   <strong>SDI Ulumiyah Al Makruf</strong><br>
   Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350
 </div>
 
 <script>
-function loadSiswa(){
-  return JSON.parse(localStorage.getItem('siswa'))||[];
-}
-function saveSiswa(list){
-  localStorage.setItem('siswa',JSON.stringify(list));
-}
+// ==== LOCAL STORAGE UTILS ====
+function loadSiswa(){ return JSON.parse(localStorage.getItem('siswa'))||[]; }
+function saveSiswa(list){ localStorage.setItem('siswa',JSON.stringify(list)); }
 
-// tampilkan tabel siswa
+// ==== RENDER TABEL ====
 function renderSiswa(){
-  const list=loadSiswa();
-  const tbody=document.getElementById('tabel-siswa');
-  tbody.innerHTML="";
+  const list = loadSiswa();
+  const tbody = document.getElementById('tabel-siswa');
+  tbody.innerHTML = "";
   list.forEach((s,i)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`
@@ -117,21 +117,29 @@ function renderSiswa(){
       <td>${s.wali}</td>
       <td>${s.kontak}</td>
       <td>${s.status}</td>
+      <td>${s.tanggalDaftar||"-"}</td>
+      <td>${s.tanggalKeluar||"-"}</td>
       <td><button class="btn" onclick="toggleStatus(${i})">Ubah Status</button></td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// toggle status aktif/keluar
+// ==== TOGGLE STATUS ====
 function toggleStatus(i){
   let list=loadSiswa();
-  list[i].status = (list[i].status==="Aktif") ? "Keluar" : "Aktif";
+  if(list[i].status==="Aktif"){
+    list[i].status="Keluar";
+    list[i].tanggalKeluar=new Date().toLocaleDateString('id-ID');
+  } else {
+    list[i].status="Aktif";
+    list[i].tanggalKeluar="";
+  }
   saveSiswa(list);
   renderSiswa();
 }
 
-// form pendaftaran
+// ==== FORM PENDAFTARAN ====
 document.getElementById('formPendaftaran').addEventListener('submit',e=>{
   e.preventDefault();
   const nama=document.getElementById('nama').value;
@@ -141,14 +149,19 @@ document.getElementById('formPendaftaran').addEventListener('submit',e=>{
   const kontak=document.getElementById('kontak').value;
   
   let list=loadSiswa();
-  list.push({nama,kelas,jk,wali,kontak,status:"Aktif"});
+  list.push({
+    nama,kelas,jk,wali,kontak,
+    status:"Aktif",
+    tanggalDaftar:new Date().toLocaleDateString('id-ID'),
+    tanggalKeluar:""
+  });
   saveSiswa(list);
   renderSiswa();
   e.target.reset();
   alert("Pendaftaran berhasil!");
 });
 
-// download JSON
+// ==== DOWNLOAD ====
 function downloadJSON(){
   const data=localStorage.getItem('siswa');
   if(!data){alert("Belum ada data!");return;}
@@ -156,45 +169,44 @@ function downloadJSON(){
   saveAs(blob,"siswa.json");
 }
 
-// download Word
 function downloadWord(){
   const list=loadSiswa();
   if(list.length===0){alert("Belum ada data!");return;}
-
-  let htmlContent = `
-  <html xmlns:o='urn:schemas-microsoft-com:office:office'
+  let html=`<html xmlns:o='urn:schemas-microsoft-com:office:office'
         xmlns:w='urn:schemas-microsoft-com:office:word'
         xmlns='http://www.w3.org/TR/REC-html40'>
-  <head><meta charset='utf-8'><title>Daftar Siswa</title></head><body>
-  <h2 style="text-align:center">DAFTAR SISWA EKSTRA TARI<br>SDI ULUMIYAH AL MAKRUf</h2>
-  <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
-  <tr><th>Nama</th><th>Kelas</th><th>JK</th><th>Wali</th><th>Kontak</th><th>Status</th></tr>
-  `;
-
+    <head><meta charset='utf-8'><title>Daftar Siswa</title></head><body>
+    <h2 style="text-align:center">DAFTAR SISWA EKSTRA TARI<br>SDI ULUMIYAH AL MAKRUf</h2>
+    <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
+    <tr><th>Nama</th><th>Kelas</th><th>JK</th><th>Wali</th><th>Kontak</th><th>Status</th><th>Tgl Daftar</th><th>Tgl Keluar</th></tr>`;
   list.forEach(s=>{
-    htmlContent += `<tr>
-      <td>${s.nama}</td>
-      <td>${s.kelas}</td>
-      <td>${s.jk}</td>
-      <td>${s.wali}</td>
-      <td>${s.kontak}</td>
-      <td>${s.status}</td>
+    html+=`<tr>
+      <td>${s.nama}</td><td>${s.kelas}</td><td>${s.jk}</td><td>${s.wali}</td>
+      <td>${s.kontak}</td><td>${s.status}</td><td>${s.tanggalDaftar||"-"}</td><td>${s.tanggalKeluar||"-"}</td>
     </tr>`;
   });
-
-  htmlContent += `</table>
-  <p style="text-align:right;margin-top:30px;">
-    Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
-    Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
-  </p>
-  </body></html>`;
-
-  const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+  html+=`</table><p style="text-align:right;margin-top:30px;">
+    Kediri, ${new Date().toLocaleDateString('id-ID')}<br>Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
+  </p></body></html>`;
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
   saveAs(blob, "Daftar_Siswa_Ekstra_Tari.doc");
 }
 
-// tampilkan saat pertama kali
-renderSiswa();
+// ==== INIT DATA ====
+if(loadSiswa().length===0){
+  fetch('data/siswa.json')
+    .then(r=>r.json())
+    .then(d=>{
+      d.forEach(s=>{
+        s.status="Aktif";
+        s.tanggalDaftar=new Date().toLocaleDateString('id-ID');
+        s.tanggalKeluar="";
+      });
+      saveSiswa(d);
+      renderSiswa();
+    });
+} else { renderSiswa(); }
+
 </script>
 </body>
 </html>
