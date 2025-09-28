@@ -1,18 +1,200 @@
-<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Pendaftaran</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pendaftaran Siswa - Ekstra Tari</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
 <div class="header">
-  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
-  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
-</div>
-<div class="nav">
-  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
-</div>
-<div class='container'><div class='hero'><h2>Pendaftaran & Pengunduran Diri</h2><form id='formPendaftaran' onsubmit='addSiswa(event)'><label>Nama<input id='p_nama' class='input'></label><label>Kelas<input id='p_kelas' class='input'></label><button class='btn' type='submit'>Tambah Siswa</button></form><h3 style='margin-top:18px'>Daftar Siswa (lokal)</h3><table class='table'><thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Aksi</th></tr></thead><tbody id='siswa-body'></tbody></table><div style='margin-top:12px'><button class='btn' onclick='downloadSiswaExcel()'>Download Daftar Siswa</button></div></div></div>
-<div class="footer">
-  <div style="max-width:1000px;margin:0 auto">
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
-    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+  <div class="brand">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
+    <div class="brand-text">
+      <div class="title">Ekstra Tari</div>
+      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
+    </div>
+  </div>
+  <div>
+    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
   </div>
 </div>
-<script src='assets/js/pendaftaran.js'></script></body></html>
+
+<!-- Navigasi -->
+<div class="nav">
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="pendaftaran.html">Pendaftaran</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="materi.html">Materi</a>
+  <a href="kontak.html">Kontak</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<!-- Kontainer -->
+<div class="container">
+  <div class="hero">
+    <h1>Pendaftaran Siswa Baru</h1>
+    <form id="formPendaftaran">
+      <label>Nama Siswa</label>
+      <input type="text" id="nama" class="input" required>
+      
+      <label>Kelas</label>
+      <input type="text" id="kelas" class="input" required>
+      
+      <label>Jenis Kelamin</label>
+      <select id="jk" class="input" required>
+        <option value="">-- pilih --</option>
+        <option value="Laki-laki">Laki-laki</option>
+        <option value="Perempuan">Perempuan</option>
+      </select>
+      
+      <label>Nama Orang Tua / Wali</label>
+      <input type="text" id="wali" class="input" required>
+      
+      <label>No. HP Orang Tua / Wali</label>
+      <input type="text" id="kontak" class="input" required>
+      
+      <button type="submit" class="btn">Daftar</button>
+    </form>
+  </div>
+
+  <div class="hero">
+    <h2>Daftar Siswa Terdaftar</h2>
+    <div style="overflow-x:auto;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Kelas</th>
+            <th>JK</th>
+            <th>Wali</th>
+            <th>Kontak</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tabel-siswa"></tbody>
+      </table>
+    </div>
+    <br>
+    <button class="btn" onclick="downloadJSON()">Download JSON</button>
+    <button class="btn" onclick="downloadWord()">Download Word</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+</div>
+
+<script>
+function loadSiswa(){
+  return JSON.parse(localStorage.getItem('siswa'))||[];
+}
+function saveSiswa(list){
+  localStorage.setItem('siswa',JSON.stringify(list));
+}
+
+// tampilkan tabel siswa
+function renderSiswa(){
+  const list=loadSiswa();
+  const tbody=document.getElementById('tabel-siswa');
+  tbody.innerHTML="";
+  list.forEach((s,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${s.nama}</td>
+      <td>${s.kelas}</td>
+      <td>${s.jk}</td>
+      <td>${s.wali}</td>
+      <td>${s.kontak}</td>
+      <td>${s.status}</td>
+      <td><button class="btn" onclick="toggleStatus(${i})">Ubah Status</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// toggle status aktif/keluar
+function toggleStatus(i){
+  let list=loadSiswa();
+  list[i].status = (list[i].status==="Aktif") ? "Keluar" : "Aktif";
+  saveSiswa(list);
+  renderSiswa();
+}
+
+// form pendaftaran
+document.getElementById('formPendaftaran').addEventListener('submit',e=>{
+  e.preventDefault();
+  const nama=document.getElementById('nama').value;
+  const kelas=document.getElementById('kelas').value;
+  const jk=document.getElementById('jk').value;
+  const wali=document.getElementById('wali').value;
+  const kontak=document.getElementById('kontak').value;
+  
+  let list=loadSiswa();
+  list.push({nama,kelas,jk,wali,kontak,status:"Aktif"});
+  saveSiswa(list);
+  renderSiswa();
+  e.target.reset();
+  alert("Pendaftaran berhasil!");
+});
+
+// download JSON
+function downloadJSON(){
+  const data=localStorage.getItem('siswa');
+  if(!data){alert("Belum ada data!");return;}
+  const blob=new Blob([data],{type:'application/json'});
+  saveAs(blob,"siswa.json");
+}
+
+// download Word
+function downloadWord(){
+  const list=loadSiswa();
+  if(list.length===0){alert("Belum ada data!");return;}
+
+  let htmlContent = `
+  <html xmlns:o='urn:schemas-microsoft-com:office:office'
+        xmlns:w='urn:schemas-microsoft-com:office:word'
+        xmlns='http://www.w3.org/TR/REC-html40'>
+  <head><meta charset='utf-8'><title>Daftar Siswa</title></head><body>
+  <h2 style="text-align:center">DAFTAR SISWA EKSTRA TARI<br>SDI ULUMIYAH AL MAKRUf</h2>
+  <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
+  <tr><th>Nama</th><th>Kelas</th><th>JK</th><th>Wali</th><th>Kontak</th><th>Status</th></tr>
+  `;
+
+  list.forEach(s=>{
+    htmlContent += `<tr>
+      <td>${s.nama}</td>
+      <td>${s.kelas}</td>
+      <td>${s.jk}</td>
+      <td>${s.wali}</td>
+      <td>${s.kontak}</td>
+      <td>${s.status}</td>
+    </tr>`;
+  });
+
+  htmlContent += `</table>
+  <p style="text-align:right;margin-top:30px;">
+    Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
+    Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
+  </p>
+  </body></html>`;
+
+  const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+  saveAs(blob, "Daftar_Siswa_Ekstra_Tari.doc");
+}
+
+// tampilkan saat pertama kali
+renderSiswa();
+</script>
+</body>
+</html>
