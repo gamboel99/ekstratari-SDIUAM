@@ -6,6 +6,7 @@
 <title>Penilaian Kinerja Guru - Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -73,7 +74,7 @@
       <button type="button" class="btn" onclick="hitungTotal()">Hitung Total Skor</button>
       <input type="text" name="totalSkor" class="input" id="totalSkor" placeholder="Total Skor" readonly>
       <br><br>
-      <button type="submit" class="btn">Simpan / Kirim Penilaian</button>
+      <button type="submit" class="btn">Kirim Penilaian via Email</button>
       <button type="button" class="btn" onclick="downloadExcel()">Download Excel</button>
       <button type="button" class="btn" onclick="downloadWord()">Download Word</button>
     </form>
@@ -86,8 +87,9 @@
   Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script>
+emailjs.init("YOUR_USER_ID"); // ganti dengan user ID EmailJS Anda
+
 const bobot = {
   Kedisiplinan:10,
   Inovasi:20,
@@ -146,11 +148,23 @@ function downloadWord(){
   saveAs(blob,'Penilaian_Guru.doc');
 }
 
-// submit form
+// kirim email via EmailJS
 document.getElementById('penilaianForm').addEventListener('submit', e=>{
   e.preventDefault();
   hitungTotal();
-  alert("Penilaian siap diunduh. Gunakan tombol Excel/Word untuk menyimpan data.");
+  const data = getFormData();
+  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
+    to_email:"mitrautamaconsultindo@gmail.com",
+    namaPenilai: data.namaPenilai,
+    jabatan: data.jabatan,
+    skor: JSON.stringify(data),
+    totalSkor: data.totalSkor
+  }).then(()=>{
+    alert("Penilaian terkirim ke email mitrautamaconsultindo@gmail.com!");
+  }).catch(err=>{
+    console.error(err);
+    alert("Gagal mengirim email. Cek konsol untuk detail.");
+  });
 });
 </script>
 </body>
