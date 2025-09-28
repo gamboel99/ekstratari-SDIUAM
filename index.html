@@ -36,15 +36,16 @@
 </div>
 
 <div class="container">
+
   <!-- Wall Kegiatan -->
   <div class="hero">
-    <h1>Agenda & Kegiatan</h1>
-    <div id="wall-kegiatan"></div>
+    <h1>Agenda Kegiatan</h1>
+    <div id="agenda-list"></div>
   </div>
 
-  <!-- Preview Galeri -->
+  <!-- Dokumentasi -->
   <div class="hero">
-    <h1>Preview Galeri</h1>
+    <h1>Dokumentasi Kegiatan</h1>
     <div id="galeri-preview" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px"></div>
   </div>
 
@@ -60,6 +61,7 @@
       </table>
     </div>
   </div>
+
 </div>
 
 <!-- Footer -->
@@ -70,74 +72,96 @@
 </div>
 
 <script>
-// ========== WALL KEGIATAN ==========
-function loadKegiatan(){ return JSON.parse(localStorage.getItem('kegiatan'))||[]; }
-function loadMedia(){ return JSON.parse(localStorage.getItem('media'))||[]; }
+// ===== Load Agenda & Media dari localStorage =====
+function renderAgenda(){
+  const d = JSON.parse(localStorage.getItem('agenda'))||[];
+  const agendaEl = document.getElementById('agenda-list');
+  agendaEl.innerHTML = "";
+  const bulanMap = {};
+  d.forEach(ev=>{
+    const bulan = new Date(ev.tanggal).toLocaleString('id-ID',{month:'long',year:'numeric'});
+    if(!bulanMap[bulan]) bulanMap[bulan]=[];
+    bulanMap[bulan].push(ev);
+  });
+  for(const bln in bulanMap){
+    const sec=document.createElement('div');
+    sec.innerHTML=`<h3>${bln}</h3>`;
+    bulanMap[bln].forEach(ev=>{
+      const div=document.createElement('div');
+      div.innerHTML=`<strong>${ev.judul}</strong><br>${ev.tanggal} — ${ev.deskripsi}`;
+      sec.appendChild(div);
+    });
+    agendaEl.appendChild(sec);
+  }
+}
 
-function renderWall(){
-  const wall = document.getElementById('wall-kegiatan');
-  wall.innerHTML="";
-  loadKegiatan().slice().reverse().forEach(k=>{
-    const div = document.createElement('div');
-    div.className='wall-item';
-    div.innerHTML=`<strong>${k.judul}</strong> (${k.tanggal})<br>${k.deskripsi}<hr>`;
-    wall.appendChild(div);
+function renderMedia(){
+  const media = JSON.parse(localStorage.getItem('media'))||[];
+  const galeriEl = document.getElementById('galeri-preview');
+  galeriEl.innerHTML="";
+  media.forEach(g=>{
+    const fig=document.createElement('figure');
+    fig.style.margin="0"; fig.style.textAlign="center";
+    if(g.type==='image'){
+      fig.innerHTML=`<img src="${g.url}" style="width:100%;border-radius:8px"><figcaption>${g.judul||''}</figcaption>`;
+    } else {
+      fig.innerHTML=`<video controls style="width:100%;border-radius:8px"><source src="${g.url}"></video>`;
+    }
+    galeriEl.appendChild(fig);
   });
 }
 
-// ========== PREVIEW GALERI ==========
-function renderGaleri(){
-  const gal = document.getElementById('galeri-preview');
-  gal.innerHTML="";
-  loadMedia().slice().reverse().forEach(m=>{
-    const fig = document.createElement('figure');
-    if(m.type==='image') fig.innerHTML=`<img src="${m.url}" alt="media" style="border-radius:8px"><figcaption>${m.url}</figcaption>`;
-    else fig.innerHTML=`<video src="${m.url}" controls style="border-radius:8px;max-width:100%"></video><figcaption>${m.url}</figcaption>`;
-    gal.appendChild(fig);
-  });
-}
-
-// ========== ABSENSI MINGGUAN ==========
-function getStartOfWeek(date){
-  const d=new Date(date);
-  const day=d.getDay();
-  const diff=d.getDate()-day+(day===0?-6:1);
-  const monday=new Date(d.setDate(diff));
+// ===== Absensi Mingguan =====
+function getStartOfWeek(date) {
+  const d = new Date(date);
+  const day = d.getDay(); // Minggu=0, Senin=1
+  const diff = d.getDate() - day + (day===0?-6:1);
+  const monday = new Date(d.setDate(diff));
   monday.setHours(0,0,0,0);
   return monday;
 }
-
 function getEndOfWeek(date){
-  const start=getStartOfWeek(date);
+  const start = getStartOfWeek(date);
   return new Date(start.getFullYear(),start.getMonth(),start.getDate()+6,23,59,59);
 }
 
 function renderRingkasan(list){
-  const tbody=document.getElementById('absensi-ringkasan');
+  const tbody = document.getElementById('absensi-ringkasan');
   tbody.innerHTML="";
-  const today=new Date();
-  const startWeek=getStartOfWeek(today);
-  const endWeek=getEndOfWeek(today);
-  const filtered=list.filter(item=>{ const tgl=new Date(item.tanggal); return tgl>=startWeek && tgl<=endWeek; });
+  const today = new Date();
+  const startWeek = getStartOfWeek(today);
+  const endWeek   = getEndOfWeek(today);
+
+  const filtered = list.filter(item=>{
+    const tgl = new Date(item.tanggal);
+    return tgl >= startWeek && tgl <= endWeek;
+  });
 
   filtered.forEach(item=>{
     let hadir=item.siswa.filter(s=>s.status==="Hadir").length;
     let izin=item.siswa.filter(s=>s.status==="Izin").length;
     let sakit=item.siswa.filter(s=>s.status==="Sakit").length;
     let alpa=item.siswa.filter(s=>s.status==="Alpa").length;
+
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td><td>${hadir}</td><td>${izin}</td><td>${sakit}</td><td>${alpa}</td>`;
+    tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td>
+      <td>${hadir}</td>
+      <td>${izin}</td>
+      <td>${sakit}</td>
+      <td>${alpa}</td>`;
     tbody.appendChild(tr);
   });
-
-  if(filtered.length===0) tbody.innerHTML=`<tr><td colspan="5">Belum ada absensi minggu ini</td></tr>`;
+  if(filtered.length===0){
+    tbody.innerHTML=`<tr><td colspan="5">Belum ada absensi minggu ini</td></tr>`;
+  }
 }
 
-// ===== INIT =====
-renderWall();
-renderGaleri();
-const local=JSON.parse(localStorage.getItem('absensi'))||[];
+// Init
+renderAgenda();
+renderMedia();
+let local = JSON.parse(localStorage.getItem('absensi'))||[];
 if(local.length>0) renderRingkasan(local);
 </script>
+
 </body>
 </html>
