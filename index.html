@@ -1,45 +1,27 @@
 <!doctype html>
-<html lang="id">
+<html lang='id'>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Ekstra Tari - Wall</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+<meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Ekstra Tari - Wall</title>
+<link rel='stylesheet' href='assets/css/style.css'>
 </head>
 <body>
 <div class="header">
-  <div class="brand">
-    <strong style="font-size:22px">Ekstra Tari</strong>
-    <div class="small">SDI Ulumiyah Al Makruf</div>
-  </div>
+  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:22px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
+  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
 </div>
-
 <div class="nav">
-  <a href="index.html">Beranda</a>
-  <a href="galeri.html">Galeri</a>
-  <a href="admin.html">Admin</a>
-  <a href="absensi.html">Absensi</a>
+  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
 </div>
 
-<div class="container">
-  <div class="hero">
+<div class='container'>
+  <div class='hero'>
     <h1>Agenda Kegiatan — Tahun 2025</h1>
-    <div id="agenda-list"></div>
+    <div id='agenda-list'></div>
   </div>
-
-  <div class="hero">
+  <div class='hero' style="margin-top:20px">
     <h1>Dokumentasi Kegiatan</h1>
-    <div id="galeri-preview" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px"></div>
-  </div>
-
-  <div class="hero">
-    <h1>Ringkasan Absensi Mingguan</h1>
-    <table class="table">
-      <thead>
-        <tr><th>Tanggal</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alpa</th></tr>
-      </thead>
-      <tbody id="absensi-ringkasan"></tbody>
-    </table>
+    <div id='galeri-preview' style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px"></div>
   </div>
 </div>
 
@@ -47,7 +29,9 @@
   <div>
     <strong>SDI Ulumiyah Al Makruf</strong><br>
     Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)<br>
+    Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank">sdiulumiyahalmakruf.vercel.app</a><br>
+    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" target="_blank">Facebook</a>
   </div>
 </div>
 
@@ -65,7 +49,9 @@ fetch('data/kegiatan.json').then(r=>r.json()).then(d=>{
     sec.innerHTML=`<h3>${bln}</h3>`;
     bulanMap[bln].forEach(ev=>{
       const div=document.createElement('div');
-      div.innerHTML=`<strong>${ev.judul}</strong><br><span>${ev.tanggal} — ${ev.deskripsi}</span>`;
+      div.className='hero';
+      div.style.margin='8px 0';
+      div.innerHTML=`<strong>${ev.judul}</strong><br><span class='small'>${ev.tanggal} — ${ev.deskripsi}</span>`;
       sec.appendChild(div);
     });
     agendaEl.appendChild(sec);
@@ -74,19 +60,10 @@ fetch('data/kegiatan.json').then(r=>r.json()).then(d=>{
   const galeriEl=document.getElementById('galeri-preview');
   d.galeri.forEach(g=>{
     const fig=document.createElement('figure');
-    fig.innerHTML=`<img src="${g.img}" alt="${g.judul}" style="width:100%;border-radius:8px"><figcaption>${g.tanggal} — ${g.judul}</figcaption>`;
+    fig.style.margin=0;
+    fig.innerHTML=`<img src="${g.img}" alt="${g.judul}" style="width:100%;border-radius:8px"><figcaption class='small'>${g.tanggal} — ${g.judul}</figcaption>`;
     galeriEl.appendChild(fig);
   });
 });
-
-fetch('data/absensi.json').then(r=>r.json()).then(list=>{
-  const tbody=document.getElementById('absensi-ringkasan');
-  list.forEach(item=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td><td>${item.rekap.hadir}</td><td>${item.rekap.izin}</td><td>${item.rekap.sakit}</td><td>${item.rekap.alpa}</td>`;
-    tbody.appendChild(tr);
-  });
-});
 </script>
-</body>
-</html>
+</body></html>

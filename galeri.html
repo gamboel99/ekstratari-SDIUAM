@@ -1,18 +1,45 @@
-<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Galeri</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<!doctype html>
+<html lang='id'>
+<head>
+<meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Galeri</title>
+<link rel='stylesheet' href='assets/css/style.css'>
+</head>
+<body>
 <div class="header">
-  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
+  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:22px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
   <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
 </div>
 <div class="nav">
   <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
 </div>
-<div class='container'><div class='hero'><h2>Galeri</h2><p class='small'>Upload foto ke assets/img/ lalu tambahkan di HTML jika perlu.</p></div></div>
-<div class="footer">
-  <div style="max-width:1000px;margin:0 auto">
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
-    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+
+<div class='container'>
+  <div class='hero'>
+    <h2>Galeri Dokumentasi Kegiatan</h2>
+    <div id='galeri-grid' style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px"></div>
   </div>
 </div>
+
+<div class="footer">
+  <div>
+    <strong>SDI Ulumiyah Al Makruf</strong><br>
+    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)<br>
+    Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank">sdiulumiyahalmakruf.vercel.app</a><br>
+    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" target="_blank">Facebook</a>
+  </div>
+</div>
+
+<script>
+fetch('data/kegiatan.json').then(r=>r.json()).then(d=>{
+  const grid=document.getElementById('galeri-grid');
+  d.galeri.forEach(g=>{
+    const card=document.createElement('div');
+    card.className='hero';
+    card.innerHTML=`<img src="${g.img}" alt="${g.judul}" style="width:100%;border-radius:8px"><div><strong>${g.judul}</strong><br><span class='small'>${g.tanggal}</span></div>`;
+    grid.appendChild(card);
+  });
+});
+</script>
 </body></html>
