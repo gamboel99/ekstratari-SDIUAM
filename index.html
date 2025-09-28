@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ekstra Tari - Beranda</title>
+<title>Ekstra Tari - Wall</title>
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -11,14 +11,14 @@
 <!-- Header -->
 <div class="header">
   <div class="brand">
-    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah">
     <div class="brand-text">
       <div class="title">Ekstra Tari</div>
       <div class="subtitle">SDI Ulumiyah Al Makruf</div>
     </div>
   </div>
   <div>
-    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
+    <img src="assets/img/logo-ekstra.png" alt="logo ekstra">
   </div>
 </div>
 
@@ -35,21 +35,21 @@
   <a href="admin.html">Admin</a>
 </div>
 
+<!-- Kontainer -->
 <div class="container">
-
-  <!-- Wall Kegiatan -->
+  <!-- Agenda -->
   <div class="hero">
-    <h1>Agenda Kegiatan</h1>
+    <h1>Agenda Kegiatan — Tahun 2025</h1>
     <div id="agenda-list"></div>
   </div>
 
-  <!-- Dokumentasi -->
+  <!-- Dokumentasi Galeri -->
   <div class="hero">
     <h1>Dokumentasi Kegiatan</h1>
-    <div id="galeri-preview" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px"></div>
+    <div id="galeri-preview"></div>
   </div>
 
-  <!-- Ringkasan Absensi -->
+  <!-- Ringkasan Absensi Mingguan -->
   <div class="hero">
     <h1>Ringkasan Absensi Mingguan</h1>
     <div style="overflow-x:auto;">
@@ -61,7 +61,6 @@
       </table>
     </div>
   </div>
-
 </div>
 
 <!-- Footer -->
@@ -72,96 +71,77 @@
 </div>
 
 <script>
-// ===== Load Agenda & Media dari localStorage =====
-function renderAgenda(){
-  const d = JSON.parse(localStorage.getItem('agenda'))||[];
-  const agendaEl = document.getElementById('agenda-list');
-  agendaEl.innerHTML = "";
-  const bulanMap = {};
-  d.forEach(ev=>{
-    const bulan = new Date(ev.tanggal).toLocaleString('id-ID',{month:'long',year:'numeric'});
-    if(!bulanMap[bulan]) bulanMap[bulan]=[];
-    bulanMap[bulan].push(ev);
-  });
-  for(const bln in bulanMap){
-    const sec=document.createElement('div');
-    sec.innerHTML=`<h3>${bln}</h3>`;
-    bulanMap[bln].forEach(ev=>{
-      const div=document.createElement('div');
-      div.innerHTML=`<strong>${ev.judul}</strong><br>${ev.tanggal} — ${ev.deskripsi}`;
-      sec.appendChild(div);
+// ====== Load Agenda & Galeri ======
+fetch('data/kegiatan.json')
+  .then(r => r.json())
+  .then(d => {
+    const agendaEl = document.getElementById('agenda-list');
+    const bulanMap = {};
+    d.agenda.forEach(ev => {
+      const bulan = new Date(ev.tanggal).toLocaleString('id-ID',{month:'long',year:'numeric'});
+      if(!bulanMap[bulan]) bulanMap[bulan]=[];
+      bulanMap[bulan].push(ev);
     });
-    agendaEl.appendChild(sec);
-  }
-}
-
-function renderMedia(){
-  const media = JSON.parse(localStorage.getItem('media'))||[];
-  const galeriEl = document.getElementById('galeri-preview');
-  galeriEl.innerHTML="";
-  media.forEach(g=>{
-    const fig=document.createElement('figure');
-    fig.style.margin="0"; fig.style.textAlign="center";
-    if(g.type==='image'){
-      fig.innerHTML=`<img src="${g.url}" style="width:100%;border-radius:8px"><figcaption>${g.judul||''}</figcaption>`;
-    } else {
-      fig.innerHTML=`<video controls style="width:100%;border-radius:8px"><source src="${g.url}"></video>`;
+    for(const bln in bulanMap){
+      const sec = document.createElement('div');
+      sec.innerHTML = `<h3>${bln}</h3>`;
+      bulanMap[bln].forEach(ev=>{
+        const div = document.createElement('div');
+        div.innerHTML = `<strong>${ev.judul}</strong><br><span>${ev.tanggal} — ${ev.deskripsi}</span>`;
+        sec.appendChild(div);
+      });
+      agendaEl.appendChild(sec);
     }
-    galeriEl.appendChild(fig);
-  });
-}
 
-// ===== Absensi Mingguan =====
-function getStartOfWeek(date) {
+    const galeriEl = document.getElementById('galeri-preview');
+    d.galeri.forEach(g => {
+      const fig = document.createElement('figure');
+      fig.innerHTML = `<img src="${g.img}" alt="${g.judul}"><figcaption>${g.tanggal} — ${g.judul}</figcaption>`;
+      galeriEl.appendChild(fig);
+    });
+  });
+
+// ====== Ringkasan Absensi Mingguan ======
+function getStartOfWeek(date){
   const d = new Date(date);
-  const day = d.getDay(); // Minggu=0, Senin=1
-  const diff = d.getDate() - day + (day===0?-6:1);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
   const monday = new Date(d.setDate(diff));
   monday.setHours(0,0,0,0);
   return monday;
 }
 function getEndOfWeek(date){
   const start = getStartOfWeek(date);
-  return new Date(start.getFullYear(),start.getMonth(),start.getDate()+6,23,59,59);
+  return new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6, 23,59,59);
 }
-
 function renderRingkasan(list){
-  const tbody = document.getElementById('absensi-ringkasan');
+  const tbody=document.getElementById('absensi-ringkasan');
   tbody.innerHTML="";
   const today = new Date();
   const startWeek = getStartOfWeek(today);
   const endWeek   = getEndOfWeek(today);
-
   const filtered = list.filter(item=>{
     const tgl = new Date(item.tanggal);
     return tgl >= startWeek && tgl <= endWeek;
   });
-
   filtered.forEach(item=>{
-    let hadir=item.siswa.filter(s=>s.status==="Hadir").length;
-    let izin=item.siswa.filter(s=>s.status==="Izin").length;
-    let sakit=item.siswa.filter(s=>s.status==="Sakit").length;
-    let alpa=item.siswa.filter(s=>s.status==="Alpa").length;
-
-    const tr=document.createElement('tr');
+    const hadir = item.siswa.filter(s=>s.status==="Hadir").length;
+    const izin  = item.siswa.filter(s=>s.status==="Izin").length;
+    const sakit = item.siswa.filter(s=>s.status==="Sakit").length;
+    const alpa  = item.siswa.filter(s=>s.status==="Alpa").length;
+    const tr = document.createElement('tr');
     tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td>
-      <td>${hadir}</td>
-      <td>${izin}</td>
-      <td>${sakit}</td>
-      <td>${alpa}</td>`;
+                  <td>${hadir}</td><td>${izin}</td><td>${sakit}</td><td>${alpa}</td>`;
     tbody.appendChild(tr);
   });
   if(filtered.length===0){
-    tbody.innerHTML=`<tr><td colspan="5">Belum ada absensi minggu ini</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5">Belum ada absensi minggu ini</td></tr>`;
   }
 }
 
-// Init
-renderAgenda();
-renderMedia();
-let local = JSON.parse(localStorage.getItem('absensi'))||[];
+// Load absensi dari localStorage
+const local = JSON.parse(localStorage.getItem('absensi'))||[];
 if(local.length>0) renderRingkasan(local);
 </script>
-
 </body>
 </html>
