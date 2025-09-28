@@ -3,14 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin Ekstra Tari</title>
+<title>Admin - Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
-<style>
-.wall-item {border:1px solid #ccc;padding:10px;margin-bottom:10px;border-radius:5px;background:#f9f9f9;}
-.wall-item h3 {margin:0 0 5px;}
-.wall-item img, .wall-item video {max-width:100%;border-radius:5px;margin-top:5px;}
-.btn-delete {color:red;cursor:pointer;margin-left:10px;}
-</style>
 </head>
 <body>
 
@@ -42,23 +36,23 @@
 </div>
 
 <div class="container">
+  <!-- Form Kegiatan -->
   <div class="hero">
-    <h1>Tambah Kegiatan & Media</h1>
-
-    <!-- Form Kegiatan -->
+    <h1>Tambah Kegiatan</h1>
     <form id="formKegiatan">
       <label>Judul Kegiatan:</label>
       <input type="text" name="judul" class="input" required>
-      <label>Deskripsi:</label>
-      <textarea name="deskripsi" class="input" required></textarea>
-      <label>Tanggal:</label>
+      <label>Tanggal Kegiatan:</label>
       <input type="date" name="tanggal" class="input" required>
+      <label>Deskripsi:</label>
+      <textarea name="deskripsi" class="input" rows="3" required></textarea>
       <button type="submit" class="btn">Tambah Kegiatan</button>
     </form>
+  </div>
 
-    <hr>
-
-    <!-- Form Media -->
+  <!-- Form Upload Media -->
+  <div class="hero">
+    <h1>Upload Media (Gambar/Video)</h1>
     <form id="formMedia">
       <label>URL Media:</label>
       <input type="text" name="url" class="input" placeholder="Link gambar atau video" required>
@@ -70,40 +64,41 @@
       </select>
       <button type="submit" class="btn">Tambah Media</button>
     </form>
+  </div>
 
-    <hr>
-
-    <h2>Preview Kegiatan & Media</h2>
+  <!-- Preview Wall -->
+  <div class="hero">
+    <h1>Preview Wall Kegiatan & Media</h1>
     <div id="preview-wall"></div>
   </div>
 </div>
 
+<!-- Footer -->
 <div class="footer">
-  <div>
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
-  </div>
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
 </div>
 
 <script>
-// ===== LocalStorage Handler =====
+// ========== DATA ==========
 function loadKegiatan(){ return JSON.parse(localStorage.getItem('kegiatan')) || []; }
 function saveKegiatan(data){ localStorage.setItem('kegiatan', JSON.stringify(data)); }
+
 function loadMedia(){ return JSON.parse(localStorage.getItem('media')) || []; }
 function saveMedia(data){ localStorage.setItem('media', JSON.stringify(data)); }
 
-// ===== Preview Wall =====
-function renderPreview(){
+// ========== RENDER WALL ==========
+function renderWall(){
   const wall = document.getElementById('preview-wall');
-  wall.innerHTML = '';
+  wall.innerHTML="";
 
   // Kegiatan
   loadKegiatan().slice().reverse().forEach((k,i)=>{
     const div = document.createElement('div');
     div.className='wall-item';
-    div.innerHTML = `<h3>${k.judul}</h3><p>${k.deskripsi}</p><small>${k.tanggal}</small>
-      <span class="btn-delete" onclick="deleteKegiatan(${i})">[hapus]</span>`;
+    div.innerHTML = `<strong>${k.judul}</strong> (${k.tanggal})<br>${k.deskripsi}
+      <span class="btn-delete" onclick="deleteKegiatan(${i})">[hapus]</span><hr>`;
     wall.appendChild(div);
   });
 
@@ -111,51 +106,58 @@ function renderPreview(){
   loadMedia().slice().reverse().forEach((m,i)=>{
     const div = document.createElement('div');
     div.className='wall-item';
-    if(m.type==='image') div.innerHTML=`<img src="${m.url}" alt="media">`;
-    else div.innerHTML=`<video src="${m.url}" controls></video>`;
-    div.innerHTML += `<span class="btn-delete" onclick="deleteMedia(${i})">[hapus]</span>`;
+    if(m.type==='image') div.innerHTML=`<img src="${m.url}" alt="media" style="max-width:100%;border-radius:8px">`;
+    else div.innerHTML=`<video src="${m.url}" controls style="max-width:100%;border-radius:8px"></video>`;
+    div.innerHTML += `<span class="btn-delete" onclick="deleteMedia(${i})">[hapus]</span><hr>`;
     wall.appendChild(div);
   });
 }
 
-// ===== Add Kegiatan =====
+// ========== HAPUS ==========
+function deleteKegiatan(i){
+  const data=loadKegiatan();
+  data.splice(i,1);
+  saveKegiatan(data);
+  renderWall();
+}
+
+function deleteMedia(i){
+  const data=loadMedia();
+  data.splice(i,1);
+  saveMedia(data);
+  renderWall();
+}
+
+// ========== FORM SUBMIT ==========
 document.getElementById('formKegiatan').addEventListener('submit', e=>{
   e.preventDefault();
-  const data = loadKegiatan();
-  const f = e.target;
-  data.push({judul:f.judul.value,deskripsi:f.deskripsi.value,tanggal:f.tanggal.value});
+  const f=e.target;
+  const data=loadKegiatan();
+  data.push({
+    judul:f.judul.value,
+    tanggal:f.tanggal.value,
+    deskripsi:f.deskripsi.value
+  });
   saveKegiatan(data);
   f.reset();
-  renderPreview();
+  renderWall();
 });
 
-// ===== Add Media =====
 document.getElementById('formMedia').addEventListener('submit', e=>{
   e.preventDefault();
-  const data = loadMedia();
-  const f = e.target;
-  data.push({url:f.url.value,type:f.type.value});
+  const f=e.target;
+  const data=loadMedia();
+  data.push({
+    url:f.url.value,
+    type:f.type.value
+  });
   saveMedia(data);
   f.reset();
-  renderPreview();
+  renderWall();
 });
 
-// ===== Delete =====
-function deleteKegiatan(index){
-  const data=loadKegiatan();
-  data.splice(data.length-1-index,1); // reverse index
-  saveKegiatan(data);
-  renderPreview();
-}
-function deleteMedia(index){
-  const data=loadMedia();
-  data.splice(data.length-1-index,1);
-  saveMedia(data);
-  renderPreview();
-}
-
-// ===== Init =====
-renderPreview();
+// initial render
+renderWall();
 </script>
 </body>
 </html>
