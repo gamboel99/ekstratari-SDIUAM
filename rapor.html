@@ -91,27 +91,32 @@ function hitungAbsensi(nama){
   return {hadir, izin, sakit, alpa};
 }
 
-// ===== Render Form Rapor =====
+// ===== Render Form Rapor (dengan warna ranking) =====
 function renderRapor(){
   const tbody = document.getElementById('rapor-list');
   tbody.innerHTML = "";
   const siswaAktif = loadSiswa().filter(s => s.status==="Aktif");
   let raporData = loadRapor();
 
-  // hitung rata-rata
   let dataRata = siswaAktif.map(s=>{
     const abs = hitungAbsensi(s.nama);
-    const r = raporData.find(r=>r.nama===s.nama) || {uts:"",semester:""};
+    const r = raporData.find(r=>r.nama===s.nama) || {uts:0, semester:0};
     const uts = Number(r.uts) || 0;
     const semester = Number(r.semester) || 0;
-    const rata = (uts+semester)/2;
+    const rata = (uts + semester)/2;
     return {...s, ...r, abs, rata};
   });
 
-  // urut ranking
   dataRata.sort((a,b)=>b.rata - a.rata);
+
   dataRata.forEach((s,i)=>{
+    let warna="";
+    if(i===0) warna="#FFD700";      // emas
+    else if(i===1) warna="#C0C0C0"; // perak
+    else if(i===2) warna="#CD7F32"; // perunggu
+
     const tr = document.createElement('tr');
+    tr.style.backgroundColor = warna;
     tr.innerHTML = `
       <td>${s.nama}</td>
       <td>${s.kelas}</td>
@@ -119,8 +124,8 @@ function renderRapor(){
       <td>${s.abs.izin}</td>
       <td>${s.abs.sakit}</td>
       <td>${s.abs.alpa}</td>
-      <td><input type="number" min="0" max="100" name="uts-${s.nama}" value="${s.uts}"></td>
-      <td><input type="number" min="0" max="100" name="semester-${s.nama}" value="${s.semester}"></td>
+      <td><input type="number" min="0" max="100" step="1" name="uts-${s.nama}" value="${s.uts}"></td>
+      <td><input type="number" min="0" max="100" step="1" name="semester-${s.nama}" value="${s.semester}"></td>
       <td>${s.rata.toFixed(2)}</td>
       <td>${i+1}</td>
     `;
@@ -135,8 +140,11 @@ document.getElementById('raporForm').addEventListener('submit', e=>{
   let raporData = loadRapor();
 
   siswaAktif.forEach(s=>{
-    const uts = document.querySelector(`input[name="uts-${s.nama}"]`).value;
-    const semester = document.querySelector(`input[name="semester-${s.nama}"]`).value;
+    const inputUts = document.querySelector(`input[name="uts-${s.nama}"]`);
+    const inputSemester = document.querySelector(`input[name="semester-${s.nama}"]`);
+    const uts = inputUts ? parseFloat(inputUts.value) || 0 : 0;
+    const semester = inputSemester ? parseFloat(inputSemester.value) || 0 : 0;
+
     const idx = raporData.findIndex(r=>r.nama===s.nama);
     if(idx>=0){
       raporData[idx].uts = uts;
@@ -148,6 +156,7 @@ document.getElementById('raporForm').addEventListener('submit', e=>{
 
   localStorage.setItem('rapor', JSON.stringify(raporData));
   alert("Rapor tersimpan!");
+  renderRapor();
 });
 
 // ===== Download JSON & Word =====
@@ -173,19 +182,23 @@ function downloadRaporWord(){
         <th>Nilai UTS</th><th>Nilai Semester</th><th>Rata-rata</th><th>Ranking</th>
       </tr>`;
 
-  // hitung rata-rata & ranking
   let dataRata = raporData.map(s=>{
     const abs = hitungAbsensi(s.nama);
     const uts = Number(s.uts) || 0;
     const semester = Number(s.semester) || 0;
-    const rata = (uts+semester)/2;
+    const rata = (uts + semester)/2;
     return {...s, abs, rata};
   });
 
   dataRata.sort((a,b)=>b.rata - a.rata);
 
   dataRata.forEach((s,i)=>{
-    html += `<tr>
+    let warna="";
+    if(i===0) warna="#FFD700";
+    else if(i===1) warna="#C0C0C0";
+    else if(i===2) warna="#CD7F32";
+
+    html += `<tr style="background-color:${warna};">
       <td>${s.nama}</td>
       <td>${s.kelas}</td>
       <td>${s.abs.hadir}</td>
@@ -213,7 +226,7 @@ function downloadRaporWord(){
 function liveSyncRapor(){ renderRapor(); }
 setInterval(liveSyncRapor, 3000);
 window.addEventListener('storage', e=>{
-  if(e.key==='siswa' || e.key==='rapor'){ renderRapor(); }
+  if(e.key==='siswa' || e.key==='rapor' || e.key==='absensi'){ renderRapor(); }
 });
 
 // ===== Inisialisasi =====
