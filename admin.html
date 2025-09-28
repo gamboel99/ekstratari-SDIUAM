@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin Panel - Ekstra Tari</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin - Ekstra Tari</title>
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
 <!-- Header -->
 <div class="header">
   <div class="brand">
-    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
     <div class="brand-text">
       <div class="title">Ekstra Tari</div>
       <div class="subtitle">SDI Ulumiyah Al Makruf</div>
@@ -35,51 +35,120 @@
   <a href="admin.html">Admin</a>
 </div>
 
-<!-- Kontainer -->
 <div class="container">
   <div class="hero">
-    <h1>Admin Panel</h1>
-    <p>Gunakan formulir ini untuk menambah kegiatan, dokumentasi, atau absensi baru. Data akan disimpan di <code>localStorage</code> dan bisa diunduh dalam format JSON.</p>
-
+    <h1>Admin - Kelola Kegiatan & Galeri</h1>
+    
     <h2>Tambah Kegiatan</h2>
-    <input id="judul" class="input" placeholder="Judul Kegiatan">
-    <input id="tanggal" class="input" type="date">
-    <textarea id="deskripsi" class="input" placeholder="Deskripsi kegiatan"></textarea>
-    <button class="btn" onclick="tambahKegiatan()">Tambah</button>
-    <button class="btn" onclick="downloadJSON()">Download Data</button>
+    <form id="kegiatanForm">
+      <label>Judul Kegiatan:</label>
+      <input type="text" name="judul" class="input" required>
+      <label>Tanggal Kegiatan:</label>
+      <input type="date" name="tanggal" class="input" required>
+      <label>Deskripsi:</label>
+      <textarea name="deskripsi" class="input" required></textarea>
+      <button type="submit" class="btn">Tambah Kegiatan</button>
+    </form>
+
+    <h2>Upload Media / Galeri</h2>
+    <form id="uploadForm">
+      <label>Pilih File (gambar/video):</label>
+      <input type="file" name="file" class="input" accept="image/*,video/*" required>
+      <button type="submit" class="btn">Upload</button>
+    </form>
+
+    <h2>Wall Kegiatan & Media</h2>
+    <div id="wall"></div>
   </div>
 </div>
 
-<!-- Footer -->
 <div class="footer">
-  <div>
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
-  </div>
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
 </div>
 
 <script>
-function tambahKegiatan(){
-  let data=JSON.parse(localStorage.getItem('kegiatan'))||{agenda:[],galeri:[]};
-  data.agenda.push({
-    judul:document.getElementById('judul').value,
-    tanggal:document.getElementById('tanggal').value,
-    deskripsi:document.getElementById('deskripsi').value
+function loadKegiatan(){
+  return JSON.parse(localStorage.getItem('kegiatan')) || [];
+}
+
+function loadMedia(){
+  return JSON.parse(localStorage.getItem('media')) || [];
+}
+
+function renderWall(){
+  const wall = document.getElementById('wall');
+  wall.innerHTML = "";
+
+  const kegiatan = loadKegiatan();
+  kegiatan.forEach((k,i)=>{
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `<h3>${k.judul} (${k.tanggal})</h3><p>${k.deskripsi}</p><button onclick="hapusKegiatan(${i})">Hapus</button>`;
+    wall.appendChild(div);
   });
-  localStorage.setItem('kegiatan',JSON.stringify(data));
-  alert("Kegiatan ditambahkan!");
+
+  const media = loadMedia();
+  media.forEach((m,i)=>{
+    const div = document.createElement('div');
+    div.className = 'card';
+    if(m.type.startsWith('image')){
+      div.innerHTML = `<img src="${m.url}" style="max-width:200px"><button onclick="hapusMedia(${i})">Hapus</button>`;
+    } else {
+      div.innerHTML = `<video src="${m.url}" controls style="max-width:200px"></video><button onclick="hapusMedia(${i})">Hapus</button>`;
+    }
+    wall.appendChild(div);
+  });
 }
-function downloadJSON(){
-  let data=localStorage.getItem('kegiatan');
-  if(!data){alert("Belum ada data!");return;}
-  let blob=new Blob([data],{type:'application/json'});
-  let url=URL.createObjectURL(blob);
-  let a=document.createElement('a');
-  a.href=url;a.download="kegiatan.json";
-  a.click();
-  URL.revokeObjectURL(url);
+
+// Tambah kegiatan
+document.getElementById('kegiatanForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const judul = e.target.judul.value;
+  const tanggal = e.target.tanggal.value;
+  const deskripsi = e.target.deskripsi.value;
+  let kegiatan = loadKegiatan();
+  kegiatan.push({judul,tanggal,deskripsi});
+  localStorage.setItem('kegiatan', JSON.stringify(kegiatan));
+  e.target.reset();
+  renderWall();
+});
+
+// Hapus kegiatan
+function hapusKegiatan(idx){
+  let kegiatan = loadKegiatan();
+  kegiatan.splice(idx,1);
+  localStorage.setItem('kegiatan', JSON.stringify(kegiatan));
+  renderWall();
 }
+
+// Upload media
+document.getElementById('uploadForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const file = e.target.file.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(event){
+    let media = loadMedia();
+    media.push({url:event.target.result, type:file.type});
+    localStorage.setItem('media', JSON.stringify(media));
+    renderWall();
+  }
+  reader.readAsDataURL(file);
+  e.target.reset();
+});
+
+// Hapus media
+function hapusMedia(idx){
+  let media = loadMedia();
+  media.splice(idx,1);
+  localStorage.setItem('media', JSON.stringify(media));
+  renderWall();
+}
+
+// render wall saat load
+renderWall();
 </script>
 </body>
 </html>
