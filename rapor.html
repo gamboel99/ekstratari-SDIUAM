@@ -1,18 +1,223 @@
-<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Rapor</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rapor Siswa - Ekstra Tari</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+
 <div class="header">
-  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
-  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
-</div>
-<div class="nav">
-  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
-</div>
-<div class='container'><div class='hero'><h2>Rapor Prestasi</h2><form id='raporForm' onsubmit='tambahRaporForm(event)'><label>Nama<select id='raporNama'></select></label><label>Teknik<input id='raporTeknik' class='input'></label><label>Ekspresi<input id='raporEkspresi' class='input'></label><label>Kedisiplinan<input id='raporKedisiplinan' class='input'></label><label>Catatan<textarea id='raporCatatan' class='input'></textarea></label><button class='btn' type='submit'>Tambah Rapor</button></form><h3 style='margin-top:18px'>Daftar Rapor</h3><table class='table'><thead><tr><th>No</th><th>Nama</th><th>Teknik</th><th>Ekspresi</th><th>Kedisiplinan</th><th>Catatan</th><th>Tanggal</th></tr></thead><tbody id='rapor-body'></tbody></table><div style='margin-top:12px'><button class='btn' onclick='downloadRaporCSV()'>Download CSV</button></div></div></div>
-<div class="footer">
-  <div style="max-width:1000px;margin:0 auto">
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
-    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+  <div class="brand">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
+    <div class="brand-text">
+      <div class="title">Ekstra Tari</div>
+      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
+    </div>
+  </div>
+  <div>
+    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
   </div>
 </div>
-<script src='assets/js/main.js'></script><script src='assets/js/rapor.js'></script></body></html>
+
+<div class="nav">
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="pendaftaran.html">Pendaftaran</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="materi.html">Materi</a>
+  <a href="kontak.html">Kontak</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <h1>Rapor Siswa</h1>
+    <form id="raporForm">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nama Siswa</th>
+            <th>Kelas</th>
+            <th>Hadir</th>
+            <th>Izin</th>
+            <th>Sakit</th>
+            <th>Alpa</th>
+            <th>Nilai UTS</th>
+            <th>Nilai Semester</th>
+            <th>Rata-rata</th>
+            <th>Ranking</th>
+          </tr>
+        </thead>
+        <tbody id="rapor-list"></tbody>
+      </table>
+      <button type="submit" class="btn">Simpan Rapor</button>
+      <button type="button" class="btn" onclick="downloadRaporJSON()">Download JSON</button>
+      <button type="button" class="btn" onclick="downloadRaporWord()">Download Word</button>
+    </form>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+</div>
+
+<script>
+// ===== Fungsi Load Data =====
+function loadSiswa(){ return JSON.parse(localStorage.getItem('siswa')) || []; }
+function loadAbsensi(){ return JSON.parse(localStorage.getItem('absensi')) || []; }
+function loadRapor(){ return JSON.parse(localStorage.getItem('rapor')) || []; }
+
+// ===== Hitung Rekap Absensi per Siswa =====
+function hitungAbsensi(nama){
+  const abs = loadAbsensi();
+  let hadir=0, izin=0, sakit=0, alpa=0;
+  abs.forEach(p=>{
+    p.siswa.forEach(s=>{
+      if(s.nama === nama){
+        if(s.status==="Hadir") hadir++;
+        else if(s.status==="Izin") izin++;
+        else if(s.status==="Sakit") sakit++;
+        else if(s.status==="Alpa") alpa++;
+      }
+    });
+  });
+  return {hadir, izin, sakit, alpa};
+}
+
+// ===== Render Form Rapor =====
+function renderRapor(){
+  const tbody = document.getElementById('rapor-list');
+  tbody.innerHTML = "";
+  const siswaAktif = loadSiswa().filter(s => s.status==="Aktif");
+  let raporData = loadRapor();
+
+  // hitung rata-rata
+  let dataRata = siswaAktif.map(s=>{
+    const abs = hitungAbsensi(s.nama);
+    const r = raporData.find(r=>r.nama===s.nama) || {uts:"",semester:""};
+    const uts = Number(r.uts) || 0;
+    const semester = Number(r.semester) || 0;
+    const rata = (uts+semester)/2;
+    return {...s, ...r, abs, rata};
+  });
+
+  // urut ranking
+  dataRata.sort((a,b)=>b.rata - a.rata);
+  dataRata.forEach((s,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${s.nama}</td>
+      <td>${s.kelas}</td>
+      <td>${s.abs.hadir}</td>
+      <td>${s.abs.izin}</td>
+      <td>${s.abs.sakit}</td>
+      <td>${s.abs.alpa}</td>
+      <td><input type="number" min="0" max="100" name="uts-${s.nama}" value="${s.uts}"></td>
+      <td><input type="number" min="0" max="100" name="semester-${s.nama}" value="${s.semester}"></td>
+      <td>${s.rata.toFixed(2)}</td>
+      <td>${i+1}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===== Simpan Rapor =====
+document.getElementById('raporForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const siswaAktif = loadSiswa().filter(s => s.status==="Aktif");
+  let raporData = loadRapor();
+
+  siswaAktif.forEach(s=>{
+    const uts = document.querySelector(`input[name="uts-${s.nama}"]`).value;
+    const semester = document.querySelector(`input[name="semester-${s.nama}"]`).value;
+    const idx = raporData.findIndex(r=>r.nama===s.nama);
+    if(idx>=0){
+      raporData[idx].uts = uts;
+      raporData[idx].semester = semester;
+    } else {
+      raporData.push({nama:s.nama, kelas:s.kelas, uts, semester});
+    }
+  });
+
+  localStorage.setItem('rapor', JSON.stringify(raporData));
+  alert("Rapor tersimpan!");
+});
+
+// ===== Download JSON & Word =====
+function downloadRaporJSON(){
+  const data = localStorage.getItem('rapor');
+  if(!data){ alert("Belum ada data!"); return; }
+  const blob = new Blob([data], {type:'application/json'});
+  saveAs(blob, "rapor.json");
+}
+
+function downloadRaporWord(){
+  let raporData = JSON.parse(localStorage.getItem('rapor')) || [];
+  if(raporData.length===0){ alert("Belum ada data!"); return; }
+
+  let html = `<html xmlns:o='urn:schemas-microsoft-com:office:office'
+        xmlns:w='urn:schemas-microsoft-com:office:word'
+        xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'><title>Rapor</title></head><body>
+    <h2 style="text-align:center">RAPOR EKSTRA TARI SDI ULUMIYAH AL MAKRUf</h2>
+    <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
+      <tr>
+        <th>Nama</th><th>Kelas</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alpa</th>
+        <th>Nilai UTS</th><th>Nilai Semester</th><th>Rata-rata</th><th>Ranking</th>
+      </tr>`;
+
+  // hitung rata-rata & ranking
+  let dataRata = raporData.map(s=>{
+    const abs = hitungAbsensi(s.nama);
+    const uts = Number(s.uts) || 0;
+    const semester = Number(s.semester) || 0;
+    const rata = (uts+semester)/2;
+    return {...s, abs, rata};
+  });
+
+  dataRata.sort((a,b)=>b.rata - a.rata);
+
+  dataRata.forEach((s,i)=>{
+    html += `<tr>
+      <td>${s.nama}</td>
+      <td>${s.kelas}</td>
+      <td>${s.abs.hadir}</td>
+      <td>${s.abs.izin}</td>
+      <td>${s.abs.sakit}</td>
+      <td>${s.abs.alpa}</td>
+      <td>${s.uts}</td>
+      <td>${s.semester}</td>
+      <td>${s.rata.toFixed(2)}</td>
+      <td>${i+1}</td>
+    </tr>`;
+  });
+
+  html += `</table>
+    <p style="text-align:right;margin-top:30px;">
+      Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
+      Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
+    </p></body></html>`;
+
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  saveAs(blob, "Rapor_Ekstra_Tari.doc");
+}
+
+// ===== Live Sync =====
+function liveSyncRapor(){ renderRapor(); }
+setInterval(liveSyncRapor, 3000);
+window.addEventListener('storage', e=>{
+  if(e.key==='siswa' || e.key==='rapor'){ renderRapor(); }
+});
+
+// ===== Inisialisasi =====
+renderRapor();
+</script>
+</body>
+</html>
