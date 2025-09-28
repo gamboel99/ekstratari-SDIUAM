@@ -1,15 +1,14 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Absensi Siswa - Ekstra Tari</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Absensi Siswa - Ekstra Tari</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
   <div class="brand">
     <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
@@ -23,7 +22,6 @@
   </div>
 </div>
 
-<!-- Navigasi -->
 <div class="nav">
   <a href="index.html">Beranda</a>
   <a href="galeri.html">Galeri</a>
@@ -69,7 +67,6 @@
   </div>
 </div>
 
-<!-- Footer -->
 <div class="footer">
   <strong>SDI Ulumiyah Al Makruf</strong><br>
   Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
@@ -77,12 +74,10 @@
 </div>
 
 <script>
-// ambil siswa dari localStorage (sinkron pendaftaran)
-function loadSiswa(){
-  return JSON.parse(localStorage.getItem('siswa')) || [];
-}
+// ambil siswa dari localStorage
+function loadSiswa(){ return JSON.parse(localStorage.getItem('siswa')) || []; }
 
-// tampilkan form absensi (hanya siswa Aktif)
+// render form absensi (hanya Aktif)
 function renderSiswa(){
   const tbody = document.getElementById('siswa-list');
   tbody.innerHTML = "";
@@ -99,16 +94,15 @@ function renderSiswa(){
     `;
     tbody.appendChild(tr);
   });
-  tampilkanRekap();
 }
 
 // simpan absensi
-document.getElementById('absensiForm').addEventListener('submit', e => {
+document.getElementById('absensiForm').addEventListener('submit', e=>{
   e.preventDefault();
   const tanggal = document.getElementById('tanggal').value;
   const aktif = loadSiswa().filter(s => s.status === "Aktif");
   const pertemuan = {tanggal, siswa: []};
-  aktif.forEach(s => {
+  aktif.forEach(s=>{
     const status = document.querySelector(`input[name="${s.nama}"]:checked`).value;
     pertemuan.siswa.push({nama: s.nama, kelas: s.kelas, status});
   });
@@ -173,7 +167,20 @@ function downloadAbsensiWord(){
   saveAs(blob, "Absensi_Ekstra_Tari.doc");
 }
 
-// INIT
+// ===== Live Sync =====
+function liveSync(){
+  renderSiswa();
+}
+
+// update otomatis tiap 3 detik
+setInterval(liveSync, 3000);
+
+// juga update saat localStorage berubah di tab lain
+window.addEventListener('storage', e=>{
+  if(e.key === 'siswa'){ renderSiswa(); }
+});
+
+// init
 renderSiswa();
 </script>
 </body>
