@@ -1,18 +1,115 @@
-<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Kontak</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kontak - Ekstra Tari</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- Header -->
 <div class="header">
-  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
-  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
-</div>
-<div class="nav">
-  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
-</div>
-<div class='container'><div class='hero'><h2>Kontak & Pengaduan</h2><form action='mailto:mitrautamaconsultindo@gmail.com' method='post' enctype='text/plain'><label>Nama<input name='nama' class='input'></label><label>Email<input name='email' class='input'></label><label>Pesan<textarea name='pesan' class='input'></textarea></label><button class='btn' type='submit'>Kirim</button></form></div></div>
-<div class="footer">
-  <div style="max-width:1000px;margin:0 auto">
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
-    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+  <div class="brand">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
+    <div class="brand-text">
+      <div class="title">Ekstra Tari</div>
+      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
+    </div>
+  </div>
+  <div>
+    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
   </div>
 </div>
-</body></html>
+
+<!-- Navigasi -->
+<div class="nav">
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="pendaftaran.html">Pendaftaran</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="materi.html">Materi</a>
+  <a href="kontak.html">Kontak</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <h1>Kontak Ekstra Tari</h1>
+    <form id="kontakForm">
+      <label>Nama Lengkap:</label>
+      <input type="text" name="nama" class="input" required placeholder="Nama asli">
+
+      <label>Status Pengirim:</label>
+      <select name="status" class="input" required>
+        <option value="">-- Pilih Status --</option>
+        <option value="Wali Murid">Wali Murid</option>
+        <option value="Guru">Guru</option>
+        <option value="Kepala Sekolah">Kepala Sekolah</option>
+        <option value="Owner">Owner</option>
+      </select>
+
+      <label>Email atau WA:</label>
+      <input type="text" name="emailWA" class="input" required placeholder="Email atau nomor WA">
+
+      <label>Pesan:</label>
+      <textarea name="pesan" class="input" required placeholder="Tulis pesan Anda"></textarea>
+
+      <p>Klik tombol <strong>Kirim WA</strong> untuk mengirim pesan ke Nikmatu Zuhroh. Pastikan semua field sudah diisi dengan benar.</p>
+      <button type="button" class="btn" onclick="kirimWA()">Kirim WA</button>
+    </form>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+</div>
+
+<script>
+// fungsi validasi form
+function validasiForm(data){
+  if(!data.nama.trim() || !/^[a-zA-Z\s]+$/.test(data.nama)){
+    alert("Nama harus diisi dengan huruf asli.");
+    return false;
+  }
+  if(!data.status || !["Wali Murid","Guru","Kepala Sekolah","Owner"].includes(data.status)){
+    alert("Status pengirim harus dipilih dari opsi yang tersedia.");
+    return false;
+  }
+  if(!data.emailWA.trim()){
+    alert("Email atau WA harus diisi.");
+    return false;
+  }
+  if(!data.pesan.trim()){
+    alert("Pesan tidak boleh kosong.");
+    return false;
+  }
+  return true;
+}
+
+// fungsi kirim ke WA
+function kirimWA() {
+  const form = document.getElementById('kontakForm');
+  const data = {
+    nama: form.nama.value,
+    status: form.status.value,
+    emailWA: form.emailWA.value,
+    pesan: form.pesan.value
+  };
+
+  if(!validasiForm(data)) return;
+
+  const teksWA = `Halo Nikmatu Zuhroh,%0ANama: ${encodeURIComponent(data.nama)}%0AStatus: ${encodeURIComponent(data.status)}%0AEmail/WA: ${encodeURIComponent(data.emailWA)}%0APesan: ${encodeURIComponent(data.pesan)}`;
+  const nomorWA = "+6282330321441";
+  const urlWA = `https://wa.me/${nomorWA.replace(/\D/g,'')}?text=${teksWA}`;
+
+  window.open(urlWA, '_blank');
+}
+</script>
+
+</body>
+</html>
