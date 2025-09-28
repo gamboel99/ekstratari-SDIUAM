@@ -3,13 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Penilaian Kinerja Guru - Ekstra Tari</title>
+<title>Penilaian Kinerja Guru Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  (function(){emailjs.init("YOUR_USER_ID");})(); // Ganti dengan ID EmailJS Anda
+</script>
 <style>
-  .table th, .table td { text-align:center; padding:8px; }
-  .input-likert { width:50px; text-align:center; }
-  .btn { padding:6px 12px; margin:4px; cursor:pointer; }
-  #hasilKinerja { margin-top:20px; font-weight:bold; color:green; }
+  table {width:100%; border-collapse:collapse; margin-bottom:20px;}
+  th, td {border:1px solid #ccc; padding:8px; text-align:center;}
+  th {background:#f0f0f0;}
 </style>
 </head>
 <body>
@@ -47,43 +50,78 @@
     <h1>Form Penilaian Kinerja Guru Ekstra Tari</h1>
     <p>Guru yang dinilai: <strong>Nikmatu Zuhroh</strong></p>
 
-    <form id="kinerjaForm">
-      <label for="namaPenilai">Nama Penilai:</label>
-      <input type="text" id="namaPenilai" class="input" required placeholder="Masukkan nama Anda"><br><br>
+    <form id="formKinerja">
+      <label>Nama Penilai:</label>
+      <input type="text" name="namaPenilai" class="input" required>
 
-      <label for="jabatan">Jabatan/Peran:</label>
-      <select id="jabatan" class="input" required>
-        <option value="">-- Pilih Jabatan --</option>
-        <option value="Guru SDI Ulumiyah Al Makruf">Guru SDI</option>
+      <label>Jabatan / Peran:</label>
+      <select name="jabatan" class="input" required>
+        <option value="">-- Pilih --</option>
+        <option value="Guru SDI Ulumiyah Al Makruf">Guru SDI Ulumiyah Al Makruf</option>
         <option value="Kepala Sekolah">Kepala Sekolah</option>
         <option value="Ketua Yayasan">Ketua Yayasan</option>
         <option value="Owner">Owner</option>
-      </select><br><br>
+      </select>
 
-      <table class="table" border="1">
+      <h3>Isi Penilaian (Skala 1–5)</h3>
+
+      <table>
         <thead>
           <tr>
             <th>Indikator</th>
             <th>Bobot (%)</th>
-            <th>Nilai (1-5)</th>
+            <th>Nilai (1–5)</th>
+            <th>Nilai Tertimbang (0–100)</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>Kedisiplinan</td><td>10</td><td><input type="number" class="input-likert" name="kedisiplinan" min="1" max="5" required></td></tr>
-          <tr><td>Inovasi</td><td>20</td><td><input type="number" class="input-likert" name="inovasi" min="1" max="5" required></td></tr>
-          <tr><td>Prestasi</td><td>20</td><td><input type="number" class="input-likert" name="prestasi" min="1" max="5" required></td></tr>
-          <tr><td>Upgrade Kemampuan Anak</td><td>30</td><td><input type="number" class="input-likert" name="upgrade" min="1" max="5" required></td></tr>
-          <tr><td>Pengelolaan Kelas/Kegiatan</td><td>10</td><td><input type="number" class="input-likert" name="pengelolaan" min="1" max="5" required></td></tr>
-          <tr><td>Kolaborasi & Komunikasi</td><td>5</td><td><input type="number" class="input-likert" name="kolaborasi" min="1" max="5" required></td></tr>
-          <tr><td>Pengembangan Profesional</td><td>3</td><td><input type="number" class="input-likert" name="profesional" min="1" max="5" required></td></tr>
-          <tr><td>Keamanan & Kesehatan</td><td>2</td><td><input type="number" class="input-likert" name="keamanan" min="1" max="5" required></td></tr>
+          <tr>
+            <td>Kedisiplinan</td><td>10</td>
+            <td><input type="number" name="kedisiplinan" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
+          <tr>
+            <td>Inovasi</td><td>20</td>
+            <td><input type="number" name="inovasi" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
+          <tr>
+            <td>Prestasi</td><td>20</td>
+            <td><input type="number" name="prestasi" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
+          <tr>
+            <td>Upgrade Kemampuan Anak</td><td>20</td>
+            <td><input type="number" name="upgrade" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
+          <tr>
+            <td>Pengelolaan Kelas / Kegiatan</td><td>10</td>
+            <td><input type="number" name="pengelolaan" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
+          <tr>
+            <td>Kolaborasi & Komunikasi</td><td>10</td>
+            <td><input type="number" name="kolaborasi" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
+          <tr>
+            <td>Pengembangan Profesional</td><td>5</td>
+            <td><input type="number" name="profesional" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
+          <tr>
+            <td>Keamanan & Kesehatan</td><td>5</td>
+            <td><input type="number" name="keamanan" class="input nilai" min="1" max="5" required></td>
+            <td class="hasil"></td>
+          </tr>
         </tbody>
-      </table><br>
+      </table>
 
-      <button type="submit" class="btn">Kirim Penilaian via Email</button>
+      <p>Total Skor Akhir (0–100): <strong id="totalSkor">0</strong></p>
+
+      <button type="submit" class="btn">Kirim Penilaian</button>
     </form>
-
-    <div id="hasilKinerja"></div>
   </div>
 </div>
 
@@ -95,33 +133,55 @@
 </div>
 
 <script>
-document.getElementById('kinerjaForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  const namaPenilai = document.getElementById('namaPenilai').value;
-  const jabatan = document.getElementById('jabatan').value;
-  const form = e.target;
+function hitungTotal(){
+  const rows = document.querySelectorAll('tbody tr');
+  let total = 0;
+  rows.forEach(r=>{
+    const nilaiInput = r.querySelector('.nilai');
+    const bobot = parseFloat(r.cells[1].innerText);
+    let nilai = parseFloat(nilaiInput.value) || 0;
+    // Konversi ke 0-100: nilai tertimbang = (nilai / 5) * bobot
+    const tertimbang = ((nilai/5)*bobot).toFixed(2);
+    r.querySelector('.hasil').innerText = tertimbang;
+    total += parseFloat(tertimbang);
+  });
+  document.getElementById('totalSkor').innerText = total.toFixed(2);
+}
 
-  const bobot = {kedisiplinan:10, inovasi:20, prestasi:20, upgrade:30, pengelolaan:10, kolaborasi:5, profesional:3, keamanan:2};
-  let total=0;
-
-  let pesan = `Penilaian Kinerja Guru: Nikmatu Zuhroh\n`;
-  pesan += `Penilai: ${namaPenilai} (${jabatan})\n\n`;
-
-  for(const key in bobot){
-    const val = Number(form[key].value);
-    total += val * bobot[key]/100;
-    pesan += `${key.charAt(0).toUpperCase()+key.slice(1)}: ${val}\n`;
-  }
-
-  pesan += `\nSkor Total: ${total.toFixed(2)} / 5`;
-
-  document.getElementById('hasilKinerja').innerHTML = `<p>Skor Total: ${total.toFixed(2)}</p><p>Penilaian akan dikirim via email</p>`;
-
-  // kirim email langsung
-  const mailto = `mailto:mitrautamaconsultindo@gmail.com?subject=Penilaian Kinerja Guru Nikmatu Zuhroh&body=${encodeURIComponent(pesan)}`;
-  window.location.href = mailto;
+document.querySelectorAll('.nilai').forEach(input=>{
+  input.addEventListener('input', hitungTotal);
 });
-</script>
 
+document.getElementById('formKinerja').addEventListener('submit', function(e){
+  e.preventDefault();
+  const form = e.target;
+  const data = {
+    namaPenilai: form.namaPenilai.value,
+    jabatan: form.jabatan.value,
+    kedisiplinan: form.kedisiplinan.value,
+    inovasi: form.inovasi.value,
+    prestasi: form.prestasi.value,
+    upgrade: form.upgrade.value,
+    pengelolaan: form.pengelolaan.value,
+    kolaborasi: form.kolaborasi.value,
+    profesional: form.profesional.value,
+    keamanan: form.keamanan.value,
+    totalSkor: document.getElementById('totalSkor').innerText
+  };
+
+  emailjs.send('YOUR_SERVICE_ID','YOUR_TEMPLATE_ID', data)
+    .then(() => {
+      alert("Penilaian berhasil dikirim ke email!");
+      form.reset();
+      hitungTotal();
+    })
+    .catch(err=>{
+      console.error(err);
+      alert("Gagal mengirim, cek konsol.");
+    });
+});
+
+hitungTotal();
+</script>
 </body>
 </html>
