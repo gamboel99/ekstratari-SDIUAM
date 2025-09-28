@@ -1,161 +1,23 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Absensi Siswa - Ekstra Tari</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <!-- pustaka untuk generate Word -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.36.0/docxtemplater.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.1/pizzip.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.1/pizzip-utils.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-</head>
-<body>
-
-<!-- Header -->
-<div class="header">
-  <div class="brand">
-    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah">
-    <div class="brand-text">
-      <div class="title">Ekstra Tari</div>
-      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
-    </div>
-  </div>
-  <div>
-    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
-  </div>
-</div>
-
-<!-- Navigasi -->
-<div class="nav">
-  <a href="index.html">Beranda</a>
-  <a href="galeri.html">Galeri</a>
-  <a href="pendaftaran.html">Pendaftaran</a>
-  <a href="absensi.html">Absensi</a>
-  <a href="rapor.html">Rapor</a>
-  <a href="kinerja.html">Kinerja</a>
-  <a href="materi.html">Materi</a>
-  <a href="kontak.html">Kontak</a>
-  <a href="admin.html">Admin</a>
-</div>
-
-<!-- Kontainer -->
-<div class="container">
-  <div class="hero">
-    <h1>Absensi Pertemuan</h1>
-    <form id="absensiForm">
-      <label>Tanggal Pertemuan:</label>
-      <input type="date" id="tanggal" class="input" required>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Nama Siswa</th>
-            <th>Kelas</th>
-            <th>Hadir</th>
-            <th>Izin</th>
-            <th>Sakit</th>
-            <th>Alpa</th>
-          </tr>
-        </thead>
-        <tbody id="siswa-list"></tbody>
-      </table>
-      <button type="submit" class="btn">Simpan Absensi</button>
-      <button type="button" class="btn" onclick="downloadAbsensiJSON()">Download JSON</button>
-      <button type="button" class="btn" onclick="downloadAbsensiWord()">Download Word</button>
-    </form>
-  </div>
-
-  <div class="hero">
-    <h2>Rekap Absensi</h2>
-    <div id="rekap-absensi"></div>
-  </div>
-</div>
-
-<!-- Footer -->
-<div class="footer">
-  <strong>SDI Ulumiyah Al Makruf</strong><br>
-  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
-</div>
-
-<script>
-// Load siswa dari siswa.json
-let siswa=[];
-fetch('data/siswa.json')
-.then(r=>r.json())
-.then(data=>{
-  siswa=data;
-  const tbody=document.getElementById('siswa-list');
-  siswa.forEach(s=>{
+function renderRingkasan(list){
+  const tbody=document.getElementById('absensi-ringkasan');
+  tbody.innerHTML="";
+  list.forEach(item=>{
+    let hadir=item.siswa.filter(s=>s.status==="Hadir").length;
+    let izin=item.siswa.filter(s=>s.status==="Izin").length;
+    let sakit=item.siswa.filter(s=>s.status==="Sakit").length;
+    let alpa=item.siswa.filter(s=>s.status==="Alpa").length;
     const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td>${s.nama}</td>
-      <td>${s.kelas}</td>
-      <td><input type="radio" name="${s.nama}" value="Hadir" required></td>
-      <td><input type="radio" name="${s.nama}" value="Izin"></td>
-      <td><input type="radio" name="${s.nama}" value="Sakit"></td>
-      <td><input type="radio" name="${s.nama}" value="Alpa"></td>
-    `;
+    tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td>
+                  <td>${hadir}</td><td>${izin}</td><td>${sakit}</td><td>${alpa}</td>`;
     tbody.appendChild(tr);
   });
-  tampilkanRekap();
-});
-
-document.getElementById('absensiForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const tanggal=document.getElementById('tanggal').value;
-  let pertemuan={tanggal,siswa:[]};
-  siswa.forEach(s=>{
-    const status=document.querySelector(`input[name="${s.nama}"]:checked`).value;
-    pertemuan.siswa.push({nama:s.nama,kelas:s.kelas,status});
-  });
-  let data=JSON.parse(localStorage.getItem('absensi'))||[];
-  data.push(pertemuan);
-  localStorage.setItem('absensi',JSON.stringify(data));
-  tampilkanRekap();
-  alert("Absensi tersimpan!");
-});
-
-function tampilkanRekap(){
-  const data=JSON.parse(localStorage.getItem('absensi'))||[];
-  const rekap=document.getElementById('rekap-absensi');
-  rekap.innerHTML="";
-  data.forEach(p=>{
-    let table=`<h3>${p.tanggal}</h3><table class="table"><tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
-    p.siswa.forEach(s=>{
-      table+=`<tr><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
-    });
-    table+=`</table><p style="margin-top:20px;text-align:right;">Kediri, ${new Date().toLocaleDateString('id-ID')}<br>Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong></p>`;
-    rekap.innerHTML+=table;
-  });
 }
 
-function downloadAbsensiJSON(){
-  const data=localStorage.getItem('absensi');
-  if(!data){alert("Belum ada data!");return;}
-  const blob=new Blob([data],{type:'application/json'});
-  saveAs(blob,"absensi.json");
-}
-
-function downloadAbsensiWord(){
-  const data=JSON.parse(localStorage.getItem('absensi'))||[];
-  if(data.length===0){alert("Belum ada data!");return;}
-
-  let content=`ABSENSI EKSTRA TARI SDI ULUMIYAH AL MAKRUf\n\n`;
-  data.forEach(p=>{
-    content+=`Pertemuan: ${p.tanggal}\n`;
-    content+=`Nama\tKelas\tStatus\n`;
-    content+=`---------------------------------------\n`;
-    p.siswa.forEach(s=>{
-      content+=`${s.nama}\t${s.kelas}\t${s.status}\n`;
-    });
-    content+=`\nKediri, ${new Date().toLocaleDateString('id-ID')}\nGuru Ekstra Tari\n\n\nNikmatu Zuhroh\n\n\n`;
+// coba load dari data/absensi.json, kalau gagal pakai localStorage
+fetch('data/absensi.json')
+  .then(r=>r.json())
+  .then(list=>renderRingkasan(list))
+  .catch(()=>{
+    let local=JSON.parse(localStorage.getItem('absensi'))||[];
+    if(local.length>0) renderRingkasan(local);
   });
-
-  const blob=new Blob([content],{type:"application/msword"});
-  saveAs(blob,"Absensi_Ekstra_Tari.doc");
-}
-</script>
-</body>
-</html>
