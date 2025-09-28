@@ -3,8 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin - Ekstra Tari</title>
+<title>Admin Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
+<style>
+.wall-item {border:1px solid #ccc;padding:10px;margin-bottom:10px;border-radius:5px;background:#f9f9f9;}
+.wall-item h3 {margin:0 0 5px;}
+.wall-item img, .wall-item video {max-width:100%;border-radius:5px;margin-top:5px;}
+.btn-delete {color:red;cursor:pointer;margin-left:10px;}
+</style>
 </head>
 <body>
 
@@ -37,118 +43,119 @@
 
 <div class="container">
   <div class="hero">
-    <h1>Admin - Kelola Kegiatan & Galeri</h1>
-    
-    <h2>Tambah Kegiatan</h2>
-    <form id="kegiatanForm">
+    <h1>Tambah Kegiatan & Media</h1>
+
+    <!-- Form Kegiatan -->
+    <form id="formKegiatan">
       <label>Judul Kegiatan:</label>
       <input type="text" name="judul" class="input" required>
-      <label>Tanggal Kegiatan:</label>
-      <input type="date" name="tanggal" class="input" required>
       <label>Deskripsi:</label>
       <textarea name="deskripsi" class="input" required></textarea>
+      <label>Tanggal:</label>
+      <input type="date" name="tanggal" class="input" required>
       <button type="submit" class="btn">Tambah Kegiatan</button>
     </form>
 
-    <h2>Upload Media / Galeri</h2>
-    <form id="uploadForm">
-      <label>Pilih File (gambar/video):</label>
-      <input type="file" name="file" class="input" accept="image/*,video/*" required>
-      <button type="submit" class="btn">Upload</button>
+    <hr>
+
+    <!-- Form Media -->
+    <form id="formMedia">
+      <label>URL Media:</label>
+      <input type="text" name="url" class="input" placeholder="Link gambar atau video" required>
+      <label>Jenis Media:</label>
+      <select name="type" class="input" required>
+        <option value="">-- Pilih --</option>
+        <option value="image">Gambar</option>
+        <option value="video">Video</option>
+      </select>
+      <button type="submit" class="btn">Tambah Media</button>
     </form>
 
-    <h2>Wall Kegiatan & Media</h2>
-    <div id="wall"></div>
+    <hr>
+
+    <h2>Preview Kegiatan & Media</h2>
+    <div id="preview-wall"></div>
   </div>
 </div>
 
 <div class="footer">
-  <strong>SDI Ulumiyah Al Makruf</strong><br>
-  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+  <div>
+    <strong>SDI Ulumiyah Al Makruf</strong><br>
+    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+  </div>
 </div>
 
 <script>
-function loadKegiatan(){
-  return JSON.parse(localStorage.getItem('kegiatan')) || [];
-}
+// ===== LocalStorage Handler =====
+function loadKegiatan(){ return JSON.parse(localStorage.getItem('kegiatan')) || []; }
+function saveKegiatan(data){ localStorage.setItem('kegiatan', JSON.stringify(data)); }
+function loadMedia(){ return JSON.parse(localStorage.getItem('media')) || []; }
+function saveMedia(data){ localStorage.setItem('media', JSON.stringify(data)); }
 
-function loadMedia(){
-  return JSON.parse(localStorage.getItem('media')) || [];
-}
+// ===== Preview Wall =====
+function renderPreview(){
+  const wall = document.getElementById('preview-wall');
+  wall.innerHTML = '';
 
-function renderWall(){
-  const wall = document.getElementById('wall');
-  wall.innerHTML = "";
-
-  const kegiatan = loadKegiatan();
-  kegiatan.forEach((k,i)=>{
+  // Kegiatan
+  loadKegiatan().slice().reverse().forEach((k,i)=>{
     const div = document.createElement('div');
-    div.className = 'card';
-    div.innerHTML = `<h3>${k.judul} (${k.tanggal})</h3><p>${k.deskripsi}</p><button onclick="hapusKegiatan(${i})">Hapus</button>`;
+    div.className='wall-item';
+    div.innerHTML = `<h3>${k.judul}</h3><p>${k.deskripsi}</p><small>${k.tanggal}</small>
+      <span class="btn-delete" onclick="deleteKegiatan(${i})">[hapus]</span>`;
     wall.appendChild(div);
   });
 
-  const media = loadMedia();
-  media.forEach((m,i)=>{
+  // Media
+  loadMedia().slice().reverse().forEach((m,i)=>{
     const div = document.createElement('div');
-    div.className = 'card';
-    if(m.type.startsWith('image')){
-      div.innerHTML = `<img src="${m.url}" style="max-width:200px"><button onclick="hapusMedia(${i})">Hapus</button>`;
-    } else {
-      div.innerHTML = `<video src="${m.url}" controls style="max-width:200px"></video><button onclick="hapusMedia(${i})">Hapus</button>`;
-    }
+    div.className='wall-item';
+    if(m.type==='image') div.innerHTML=`<img src="${m.url}" alt="media">`;
+    else div.innerHTML=`<video src="${m.url}" controls></video>`;
+    div.innerHTML += `<span class="btn-delete" onclick="deleteMedia(${i})">[hapus]</span>`;
     wall.appendChild(div);
   });
 }
 
-// Tambah kegiatan
-document.getElementById('kegiatanForm').addEventListener('submit', e=>{
+// ===== Add Kegiatan =====
+document.getElementById('formKegiatan').addEventListener('submit', e=>{
   e.preventDefault();
-  const judul = e.target.judul.value;
-  const tanggal = e.target.tanggal.value;
-  const deskripsi = e.target.deskripsi.value;
-  let kegiatan = loadKegiatan();
-  kegiatan.push({judul,tanggal,deskripsi});
-  localStorage.setItem('kegiatan', JSON.stringify(kegiatan));
-  e.target.reset();
-  renderWall();
+  const data = loadKegiatan();
+  const f = e.target;
+  data.push({judul:f.judul.value,deskripsi:f.deskripsi.value,tanggal:f.tanggal.value});
+  saveKegiatan(data);
+  f.reset();
+  renderPreview();
 });
 
-// Hapus kegiatan
-function hapusKegiatan(idx){
-  let kegiatan = loadKegiatan();
-  kegiatan.splice(idx,1);
-  localStorage.setItem('kegiatan', JSON.stringify(kegiatan));
-  renderWall();
-}
-
-// Upload media
-document.getElementById('uploadForm').addEventListener('submit', e=>{
+// ===== Add Media =====
+document.getElementById('formMedia').addEventListener('submit', e=>{
   e.preventDefault();
-  const file = e.target.file.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(event){
-    let media = loadMedia();
-    media.push({url:event.target.result, type:file.type});
-    localStorage.setItem('media', JSON.stringify(media));
-    renderWall();
-  }
-  reader.readAsDataURL(file);
-  e.target.reset();
+  const data = loadMedia();
+  const f = e.target;
+  data.push({url:f.url.value,type:f.type.value});
+  saveMedia(data);
+  f.reset();
+  renderPreview();
 });
 
-// Hapus media
-function hapusMedia(idx){
-  let media = loadMedia();
-  media.splice(idx,1);
-  localStorage.setItem('media', JSON.stringify(media));
-  renderWall();
+// ===== Delete =====
+function deleteKegiatan(index){
+  const data=loadKegiatan();
+  data.splice(data.length-1-index,1); // reverse index
+  saveKegiatan(data);
+  renderPreview();
+}
+function deleteMedia(index){
+  const data=loadMedia();
+  data.splice(data.length-1-index,1);
+  saveMedia(data);
+  renderPreview();
 }
 
-// render wall saat load
-renderWall();
+// ===== Init =====
+renderPreview();
 </script>
 </body>
 </html>
