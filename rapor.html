@@ -6,6 +6,12 @@
 <title>Rapor Siswa - Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+  .table th, .table td { text-align:center; padding:8px; }
+  .highlight-alpa { background-color:#FF7F7F; } /* merah */
+  .highlight-izin { background-color:#FFFF99; } /* kuning */
+  .highlight-normal { background-color:#90EE90; } /* hijau */
+</style>
 </head>
 <body>
 
@@ -37,28 +43,29 @@
 <div class="container">
   <div class="hero">
     <h1>Rapor Siswa</h1>
-    <form id="raporForm">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Nama Siswa</th>
-            <th>Kelas</th>
-            <th>Hadir</th>
-            <th>Izin</th>
-            <th>Sakit</th>
-            <th>Alpa</th>
-            <th>Nilai UTS</th>
-            <th>Nilai Semester</th>
-            <th>Rata-rata</th>
-            <th>Ranking</th>
-          </tr>
-        </thead>
-        <tbody id="rapor-list"></tbody>
-      </table>
-      <button type="submit" class="btn">Simpan Rapor</button>
-      <button type="button" class="btn" onclick="downloadRaporJSON()">Download JSON</button>
-      <button type="button" class="btn" onclick="downloadRaporWord()">Download Word</button>
-    </form>
+
+    <div id="summary"></div> <!-- Ringkasan performa -->
+
+    <table class="table" border="1">
+      <thead>
+        <tr>
+          <th>Nama</th>
+          <th>Kelas</th>
+          <th>Hadir</th>
+          <th>Izin</th>
+          <th>Sakit</th>
+          <th>Alpa</th>
+          <th>UTS</th>
+          <th>UAS</th>
+          <th>Rata-rata</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="rapor-list"></tbody>
+    </table>
+    <br>
+    <button class="btn" onclick="downloadRaporJSON()">Download JSON</button>
+    <button class="btn" onclick="downloadRaporWord()">Download Word</button>
   </div>
 </div>
 
@@ -69,145 +76,144 @@
 </div>
 
 <script>
-// ===== Load & Save Data =====
+function warnaStatus(status){
+  switch(status){
+    case "Hadir": return "background-color:#90EE90"; 
+    case "Izin": return "background-color:#FFFF99"; 
+    case "Sakit": return "background-color:#ADD8E6"; 
+    case "Alpa": return "background-color:#FF7F7F"; 
+    default: return "";
+  }
+}
+
 function loadSiswa(){ return JSON.parse(localStorage.getItem('siswa')) || []; }
 function loadAbsensi(){ return JSON.parse(localStorage.getItem('absensi')) || []; }
 function loadRapor(){ return JSON.parse(localStorage.getItem('rapor')) || []; }
-function saveRapor(data){ localStorage.setItem('rapor', JSON.stringify(data)); }
 
-// ===== Hitung Absensi =====
 function hitungAbsensi(nama){
-  const abs = loadAbsensi();
+  const absensi = loadAbsensi();
   let hadir=0, izin=0, sakit=0, alpa=0;
-  abs.forEach(p=>{
+  absensi.forEach(p=>{
     p.siswa.forEach(s=>{
       if(s.nama===nama){
-        if(s.status==="Hadir") hadir++;
-        else if(s.status==="Izin") izin++;
-        else if(s.status==="Sakit") sakit++;
-        else if(s.status==="Alpa") alpa++;
+        switch(s.status){
+          case "Hadir": hadir++; break;
+          case "Izin": izin++; break;
+          case "Sakit": sakit++; break;
+          case "Alpa": alpa++; break;
+        }
       }
     });
   });
   return {hadir, izin, sakit, alpa};
 }
 
-// ===== Render Form Rapor =====
 function renderRapor(){
   const tbody = document.getElementById('rapor-list');
+  const summaryDiv = document.getElementById('summary');
   tbody.innerHTML = "";
-  const siswaAktif = loadSiswa().filter(s=>s.status==="Aktif");
+  summaryDiv.innerHTML = "";
+  const aktif = loadSiswa().filter(s=>s.status==="Aktif");
   const raporData = loadRapor();
 
-  // ambil data dan hitung rata
-  let dataRata = siswaAktif.map(s=>{
+  let totalHadir=0, totalIzin=0, totalSakit=0, totalAlpa=0;
+
+  aktif.forEach((s,i)=>{
     const abs = hitungAbsensi(s.nama);
-    const r = raporData.find(r=>r.nama===s.nama) || {uts:0, semester:0};
-    return {...s, abs, uts:r.uts, semester:r.semester, rata:(Number(r.uts)+Number(r.semester))/2};
-  });
+    const rapor = raporData.find(r=>r.nama===s.nama) || {uts:"", uas:""};
+    
+    let highlightClass = "";
+    if(abs.alpa >= 3) highlightClass = "highlight-alpa";
+    else if(abs.izin + abs.sakit >= 5) highlightClass = "highlight-izin";
+    else highlightClass = "highlight-normal";
 
-  // sort berdasarkan rata-rata
-  dataRata.sort((a,b)=>b.rata - a.rata);
+    totalHadir += abs.hadir;
+    totalIzin += abs.izin;
+    totalSakit += abs.sakit;
+    totalAlpa += abs.alpa;
 
-  // tampilkan tabel
-  dataRata.forEach((s,i)=>{
-    let warna="";
-    if(i===0) warna="#FFD700";
-    else if(i===1) warna="#C0C0C0";
-    else if(i===2) warna="#CD7F32";
+    const rata = (rapor.uts && rapor.uas)? ((Number(rapor.uts)+Number(rapor.uas))/2).toFixed(2) : "";
 
     const tr = document.createElement('tr');
-    tr.style.backgroundColor = warna;
+    tr.className = highlightClass;
     tr.innerHTML = `
       <td>${s.nama}</td>
       <td>${s.kelas}</td>
-      <td>${s.abs.hadir}</td>
-      <td>${s.abs.izin}</td>
-      <td>${s.abs.sakit}</td>
-      <td>${s.abs.alpa}</td>
-      <td><input type="number" min="0" max="100" step="1" name="uts-${s.nama}" value="${s.uts}"></td>
-      <td><input type="number" min="0" max="100" step="1" name="semester-${s.nama}" value="${s.semester}"></td>
-      <td>${s.rata.toFixed(2)}</td>
-      <td>${i+1}</td>
+      <td style="${warnaStatus('Hadir')}">${abs.hadir}</td>
+      <td style="${warnaStatus('Izin')}">${abs.izin}</td>
+      <td style="${warnaStatus('Sakit')}">${abs.sakit}</td>
+      <td style="${warnaStatus('Alpa')}">${abs.alpa}</td>
+      <td><input type="number" min="0" max="100" value="${rapor.uts}" id="uts-${i}" class="input"></td>
+      <td><input type="number" min="0" max="100" value="${rapor.uas}" id="uas-${i}" class="input"></td>
+      <td>${rata}</td>
+      <td><button class="btn" onclick="simpanNilai(${i})">Simpan</button></td>
     `;
     tbody.appendChild(tr);
   });
+
+  summaryDiv.innerHTML = `
+    <h3>Ringkasan Kehadiran</h3>
+    <p>Hadir: ${totalHadir} | Izin: ${totalIzin} | Sakit: ${totalSakit} | Alpa: ${totalAlpa}</p>
+  `;
 }
 
-// ===== Simpan Rapor =====
-document.getElementById('raporForm').addEventListener('submit', e=>{
-  e.preventDefault();
-  const siswaAktif = loadSiswa().filter(s => s.status==="Aktif");
-  let raporData = loadRapor();
+function simpanNilai(i){
+  const aktif = loadSiswa().filter(s=>s.status==="Aktif");
+  const raporData = loadRapor();
+  const nama = aktif[i].nama;
+  const uts = document.getElementById(`uts-${i}`).value;
+  const uas = document.getElementById(`uas-${i}`).value;
 
-  siswaAktif.forEach(s=>{
-    const inputUts = document.querySelector(`input[name="uts-${s.nama}"]`);
-    const inputSemester = document.querySelector(`input[name="semester-${s.nama}"]`);
-    const uts = inputUts ? parseFloat(inputUts.value) || 0 : 0;
-    const semester = inputSemester ? parseFloat(inputSemester.value) || 0 : 0;
+  const idx = raporData.findIndex(r=>r.nama===nama);
+  if(idx>=0){ raporData[idx].uts=uts; raporData[idx].uas=uas; }
+  else{ raporData.push({nama, uts, uas}); }
 
-    const idx = raporData.findIndex(r=>r.nama===s.nama);
-    if(idx>=0){
-      raporData[idx].uts = uts;
-      raporData[idx].semester = semester;
-    } else {
-      raporData.push({nama:s.nama, kelas:s.kelas, uts, semester});
-    }
-  });
+  localStorage.setItem('rapor', JSON.stringify(raporData));
+  alert(`Nilai ${nama} tersimpan!`);
+  renderRapor();
+}
 
-  saveRapor(raporData);
-  alert("Rapor tersimpan!");
-  renderRapor(); // render ulang setelah simpan
-});
-
-// ===== Download JSON & Word =====
 function downloadRaporJSON(){
-  const data = localStorage.getItem('rapor');
-  if(!data){ alert("Belum ada data!"); return; }
+  const data = JSON.stringify({siswa:loadSiswa(), rapor:loadRapor(), absensi:loadAbsensi()});
   const blob = new Blob([data], {type:'application/json'});
-  saveAs(blob, "rapor.json");
+  saveAs(blob, "Rapor_Ekstra_Tari.json");
 }
 
 function downloadRaporWord(){
-  const raporData = loadRapor();
-  if(raporData.length===0){ alert("Belum ada data!"); return; }
+  const siswa = loadSiswa().filter(s=>s.status==="Aktif");
+  const rapor = loadRapor();
+  const absensi = loadAbsensi();
 
   let html = `<html xmlns:o='urn:schemas-microsoft-com:office:office'
-      xmlns:w='urn:schemas-microsoft-com:office:word'
-      xmlns='http://www.w3.org/TR/REC-html40'>
+    xmlns:w='urn:schemas-microsoft-com:office:word'
+    xmlns='http://www.w3.org/TR/REC-html40'>
     <head><meta charset='utf-8'><title>Rapor</title></head><body>
     <h2 style="text-align:center">RAPOR EKSTRA TARI SDI ULUMIYAH AL MAKRUf</h2>
     <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
-      <tr>
-        <th>Nama</th><th>Kelas</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alpa</th>
-        <th>UTS</th><th>Semester</th><th>Rata-rata</th><th>Ranking</th>
-      </tr>`;
+    <tr>
+      <th>Nama</th><th>Kelas</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alpa</th><th>UTS</th><th>UAS</th><th>Rata-rata</th>
+    </tr>`;
 
-  let dataRata = raporData.map(s=>{
+  siswa.forEach((s)=>{
     const abs = hitungAbsensi(s.nama);
-    const rata = (Number(s.uts)+Number(s.semester))/2;
-    return {...s, abs, rata};
-  });
+    const r = rapor.find(r=>r.nama===s.nama) || {uts:"", uas:""};
+    const rata = (r.uts && r.uas)? ((Number(r.uts)+Number(r.uas))/2).toFixed(2) : "";
 
-  dataRata.sort((a,b)=>b.rata - a.rata);
+    let rowStyle="";
+    if(abs.alpa>=3) rowStyle="background-color:#FF7F7F";
+    else if(abs.izin+abs.sakit>=5) rowStyle="background-color:#FFFF99";
+    else rowStyle="background-color:#90EE90";
 
-  dataRata.forEach((s,i)=>{
-    let warna="";
-    if(i===0) warna="#FFD700";
-    else if(i===1) warna="#C0C0C0";
-    else if(i===2) warna="#CD7F32";
-
-    html += `<tr style="background-color:${warna};">
+    html += `<tr style="${rowStyle}">
       <td>${s.nama}</td>
       <td>${s.kelas}</td>
-      <td>${s.abs.hadir}</td>
-      <td>${s.abs.izin}</td>
-      <td>${s.abs.sakit}</td>
-      <td>${s.abs.alpa}</td>
-      <td>${s.uts}</td>
-      <td>${s.semester}</td>
-      <td>${s.rata.toFixed(2)}</td>
-      <td>${i+1}</td>
+      <td style="${warnaStatus('Hadir')}">${abs.hadir}</td>
+      <td style="${warnaStatus('Izin')}">${abs.izin}</td>
+      <td style="${warnaStatus('Sakit')}">${abs.sakit}</td>
+      <td style="${warnaStatus('Alpa')}">${abs.alpa}</td>
+      <td>${r.uts}</td>
+      <td>${r.uas}</td>
+      <td>${rata}</td>
     </tr>`;
   });
 
@@ -215,13 +221,13 @@ function downloadRaporWord(){
     <p style="text-align:right;margin-top:30px;">
       Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
       Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
-    </p></body></html>`;
+    </p>
+    </body></html>`;
 
   const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
   saveAs(blob, "Rapor_Ekstra_Tari.doc");
 }
 
-// ===== Inisialisasi =====
 renderRapor();
 </script>
 </body>
