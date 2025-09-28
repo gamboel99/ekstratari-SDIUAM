@@ -1,1 +1,42 @@
-async function initKinerja(){ await loadSiswa('#kinerjaNama'); const list = JSON.parse(localStorage.getItem('kinerja_list')||'[]'); renderKinerja(list); } function tambahKinerjaForm(e){ e.preventDefault(); const nama = document.getElementById('kinerjaNama').value; const indikator = document.getElementById('kinerjaIndikator').value; const skor = document.getElementById('kinerjaSkor').value; const catatan = document.getElementById('kinerjaCatatan').value; const list = JSON.parse(localStorage.getItem('kinerja_list')||'[]'); list.push({nama, indikator, skor, catatan, tanggal: new Date().toISOString().slice(0,10)}); localStorage.setItem('kinerja_list', JSON.stringify(list)); renderKinerja(list); document.getElementById('kinerjaForm').reset(); } function renderKinerja(list){ const tbody = document.getElementById('kinerja-body'); tbody.innerHTML=''; list.forEach((r,i)=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${i+1}</td><td>${r.nama}</td><td>${r.indikator}</td><td>${r.skor}</td><td>${r.catatan}</td><td>${r.tanggal}</td>`; tbody.appendChild(tr); }); } function downloadKinerjaCSV(){ const list = JSON.parse(localStorage.getItem('kinerja_list')||'[]'); const rows=[['No','Nama','Indikator','Skor','Catatan','Tanggal']]; list.forEach((r,i)=> rows.push([i+1,r.nama,r.indikator,r.skor,r.catatan,r.tanggal])); const csv = rows.map(r=> r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n'); const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='kinerja.csv'; a.click(); a.remove(); URL.revokeObjectURL(url); } document.addEventListener('DOMContentLoaded', initKinerja);
+
+async function initKinerja(){
+  await loadSiswa('#kinerjaNama');
+  const list = JSON.parse(localStorage.getItem('kinerja_list')||'[]');
+  renderKinerja(list);
+}
+
+function tambahKinerjaForm(e){
+  e.preventDefault();
+  const nama = document.getElementById('kinerjaNama').value;
+  const indikator = document.getElementById('kinerjaIndikator').value;
+  const skor = document.getElementById('kinerjaSkor').value;
+  const catatan = document.getElementById('kinerjaCatatan').value;
+  const kelas = (window.siswaMap && window.siswaMap[nama]) ? window.siswaMap[nama] : '';
+  const list = JSON.parse(localStorage.getItem('kinerja_list')||'[]');
+  list.push({nama, kelas, indikator, skor, catatan, tanggal: new Date().toISOString().slice(0,10)});
+  localStorage.setItem('kinerja_list', JSON.stringify(list));
+  renderKinerja(list);
+  document.getElementById('kinerjaForm').reset();
+}
+
+function renderKinerja(list){
+  const tbody = document.getElementById('kinerja-body');
+  tbody.innerHTML='';
+  list.forEach((r,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${i+1}</td><td>${r.nama}</td><td>${r.kelas||'-'}</td><td>${r.indikator}</td><td>${r.skor}</td><td>${r.catatan}</td><td>${r.tanggal}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function downloadKinerjaCSV(){
+  const list = JSON.parse(localStorage.getItem('kinerja_list')||'[]');
+  const rows=[['No','Nama','Kelas','Indikator','Skor','Catatan','Tanggal']];
+  list.forEach((r,i)=> rows.push([i+1,r.nama,r.kelas||'',r.indikator,r.skor,r.catatan,r.tanggal]));
+  const csv = rows.map(r=> r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='kinerja.csv'; a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+document.addEventListener('DOMContentLoaded', initKinerja);
