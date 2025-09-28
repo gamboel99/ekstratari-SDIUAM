@@ -24,7 +24,7 @@ body {
 }
 .header .brand {
   display:flex;
-  align-items:center;   /* logo dan teks sejajar */
+  align-items:center;
   gap:12px;
 }
 .header .brand img {
@@ -38,7 +38,7 @@ body {
 .header .brand-text .title {
   font-size:28px;
   font-weight:800;
-  color:#ffeb3b; /* kuning emas menyala */
+  color:#ffeb3b;
   text-shadow:2px 2px 4px rgba(0,0,0,0.6);
 }
 .header .brand-text .subtitle {
@@ -81,17 +81,21 @@ body {
 }
 .footer a {color:var(--gold)}
 
-/* Container & Card */
+/* Container & Hero */
 .container {
+  max-width:1100px;
+  margin:20px auto;
+  padding:20px;
   background-image:var(--pattern);
   background-size:180px 180px;
-  padding:20px;
+  border-radius:12px;
+  box-sizing:border-box;
 }
 .hero {
   background:#fff;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 2px 6px rgba(0,0,0,.1);
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
   margin-bottom:20px;
 }
 
@@ -109,6 +113,7 @@ h3 {font-size:16px;margin-bottom:6px}
   margin:4px 0 12px;
   border:1px solid #ccc;
   border-radius:6px;
+  box-sizing:border-box;
 }
 .btn {
   background:var(--green);
@@ -125,10 +130,11 @@ h3 {font-size:16px;margin-bottom:6px}
   width:100%;
   border-collapse:collapse;
   font-size:14px;
+  margin-top:12px;
 }
 .table th, .table td {
   border:1px solid #ccc;
-  padding:6px;
+  padding:8px;
   text-align:center;
 }
 .table th {background:#f0f0f0}
