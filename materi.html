@@ -1,18 +1,150 @@
-<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Materi</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Materi Ekstra Tari - SDI Ulumiyah Al Makruf</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+
+<!-- Header -->
 <div class="header">
-  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
-  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
-</div>
-<div class="nav">
-  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
-</div>
-<div class='container'><div class='hero'><h2>Silabus & Target Pembelajaran</h2><h3>Semester 1</h3><ul><li>Gerakan dasar & teknik postur</li><li>Latihan ritme dan ekspresi</li></ul><h3>Semester 2</h3><ul><li>Koreografi sederhana & formasi</li><li>Pentas kelas sebagai evaluasi</li></ul></div></div>
-<div class="footer">
-  <div style="max-width:1000px;margin:0 auto">
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
-    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+  <div class="brand">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
+    <div class="brand-text">
+      <div class="title">Ekstra Tari</div>
+      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
+    </div>
+  </div>
+  <div>
+    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
   </div>
 </div>
-</body></html>
+
+<!-- Navigasi -->
+<div class="nav">
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="pendaftaran.html">Pendaftaran</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="materi.html">Materi</a>
+  <a href="kontak.html">Kontak</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<div class="container">
+  <div class="hero">
+    <h1>Materi Ekstra Tari</h1>
+    <form id="materiForm">
+      <label>Nama Materi:</label>
+      <input type="text" name="namaMateri" class="input" required>
+      
+      <label>Deskripsi Materi:</label>
+      <textarea name="deskripsiMateri" class="input" required></textarea>
+      
+      <label>Hari Pertemuan:</label>
+      <input type="text" name="hariPertemuan" class="input" placeholder="Contoh: Sabtu" required>
+      
+      <label>Nomor Pertemuan:</label>
+      <input type="number" name="nomorPertemuan" class="input" min="1" value="1" required>
+      
+      <button type="submit" class="btn">Tambah Materi</button>
+      <button type="button" class="btn" onclick="downloadWord()">Download Word</button>
+    </form>
+  </div>
+
+  <div class="hero">
+    <h2>Daftar Materi Tahun Ini</h2>
+    <table class="table" id="materi-list">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Materi</th>
+          <th>Deskripsi</th>
+          <th>Hari</th>
+          <th>Pertemuan</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+</div>
+
+<script>
+// ambil materi dari localStorage
+let materi = JSON.parse(localStorage.getItem('materi')) || [];
+
+// render tabel materi
+function renderMateri() {
+  const tbody = document.querySelector('#materi-list tbody');
+  tbody.innerHTML = "";
+  materi.forEach((m, i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td>${m.namaMateri}</td>
+      <td>${m.deskripsiMateri}</td>
+      <td>${m.hariPertemuan}</td>
+      <td>${m.nomorPertemuan}</td>
+      <td><button class="btn" onclick="hapusMateri(${i})">Hapus</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// tambah materi
+document.getElementById('materiForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const form = e.target;
+  const data = {
+    namaMateri: form.namaMateri.value,
+    deskripsiMateri: form.deskripsiMateri.value,
+    hariPertemuan: form.hariPertemuan.value,
+    nomorPertemuan: form.nomorPertemuan.value
+  };
+  materi.push(data);
+  localStorage.setItem('materi', JSON.stringify(materi));
+  form.reset();
+  renderMateri();
+});
+
+// hapus materi
+function hapusMateri(index){
+  if(confirm("Hapus materi ini?")){
+    materi.splice(index,1);
+    localStorage.setItem('materi', JSON.stringify(materi));
+    renderMateri();
+  }
+}
+
+// download Word
+function downloadWord(){
+  if(materi.length === 0){ alert("Belum ada materi!"); return; }
+  let html = `<html><head><meta charset='utf-8'><title>Materi Ekstra Tari</title></head><body>`;
+  html += `<h2>Materi Ekstra Tari Tahun Ini</h2>`;
+  html += `<table border="1" cellpadding="5" cellspacing="0"><tr><th>No</th><th>Nama Materi</th><th>Deskripsi</th><th>Hari</th><th>Pertemuan</th></tr>`;
+  materi.forEach((m,i)=>{
+    html += `<tr><td>${i+1}</td><td>${m.namaMateri}</td><td>${m.deskripsiMateri}</td><td>${m.hariPertemuan}</td><td>${m.nomorPertemuan}</td></tr>`;
+  });
+  html += `</table></body></html>`;
+  const blob = new Blob(['\ufeff', html], {type:'application/msword'});
+  saveAs(blob,'Materi_Ekstra_Tari.doc');
+}
+
+// init
+renderMateri();
+</script>
+
+</body>
+</html>
