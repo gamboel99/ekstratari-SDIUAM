@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kinerja Guru Ekstra Tari</title>
+<title>Penilaian Kinerja Guru - Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
 
@@ -38,73 +38,44 @@
 
 <div class="container">
   <div class="hero">
-    <h1>Form Penilaian Kinerja Guru Ekstra Tari</h1>
-    <p>Guru yang dinilai: <strong>Nikmatu Zuhroh</strong></p>
-
-    <form id="kinerjaForm">
+    <h1>Penilaian Kinerja Guru Ekstra Tari</h1>
+    <form id="penilaianForm">
       <label>Nama Penilai:</label>
-      <input type="text" id="namaPenilai" class="input" required>
+      <input type="text" name="namaPenilai" class="input" required>
 
-      <label>Jabatan / Peran:</label>
-      <select id="jabatan" class="input" required>
-        <option value="">-- Pilih --</option>
-        <option value="Guru SDI">Guru SDI</option>
-        <option value="Kepala Sekolah">Kepala Sekolah</option>
-        <option value="Ketua Yayasan">Ketua Yayasan</option>
-        <option value="Owner">Owner</option>
+      <label>Jabatan:</label>
+      <select name="jabatan" class="input" required>
+        <option value="">-- Pilih Jabatan --</option>
+        <option value="Guru SDI Ulumiyah Al Makruf">Guru SDI</option>
+        <option value="Kepala Sekolah SDI Ulumiyah Al Makruf">Kepala Sekolah</option>
+        <option value="Ketua Yayasan Ulumiyah Al Makruf">Ketua Yayasan</option>
+        <option value="Pimpinan Yayasan Ulumiyah Al Makruf (Owner)">Owner</option>
+        <option value="Wali Murid SDI Ulumiyah Al Makruf">Wali Murid</option>
       </select>
 
-      <h3>Nilai Indikator (1–5)</h3>
+      <h2>Isi Penilaian (1 = Sangat Buruk, 5 = Sangat Baik)</h2>
       <table class="table">
         <thead>
-          <tr><th>Indikator</th><th>Bobot (%)</th><th>Nilai (1–5)</th></tr>
+          <tr><th>Indikator</th><th>Bobot (%)</th><th>Skor (1-5)</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Kedisiplinan</td>
-            <td>10</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="10" required></td>
-          </tr>
-          <tr>
-            <td>Inovasi</td>
-            <td>20</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="20" required></td>
-          </tr>
-          <tr>
-            <td>Prestasi</td>
-            <td>15</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="15" required></td>
-          </tr>
-          <tr>
-            <td>Upgrade Kemampuan Anak</td>
-            <td>25</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="25" required></td>
-          </tr>
-          <tr>
-            <td>Pengelolaan Kelas / Kegiatan</td>
-            <td>10</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="10" required></td>
-          </tr>
-          <tr>
-            <td>Kolaborasi & Komunikasi</td>
-            <td>5</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="5" required></td>
-          </tr>
-          <tr>
-            <td>Pengembangan Profesional</td>
-            <td>10</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="10" required></td>
-          </tr>
-          <tr>
-            <td>Keamanan & Kesehatan</td>
-            <td>5</td>
-            <td><input type="number" min="1" max="5" class="input skor" data-bobot="5" required></td>
-          </tr>
+          <tr><td>Kedisiplinan</td><td>10</td><td><input type="number" name="Kedisiplinan" min="1" max="5" class="input skor" required></td></tr>
+          <tr><td>Inovasi</td><td>20</td><td><input type="number" name="Inovasi" min="1" max="5" class="input skor" required></td></tr>
+          <tr><td>Prestasi</td><td>20</td><td><input type="number" name="Prestasi" min="1" max="5" class="input skor" required></td></tr>
+          <tr><td>Upgrade Kemampuan Anak</td><td>30</td><td><input type="number" name="UpgradeKemampuan" min="1" max="5" class="input skor" required></td></tr>
+          <tr><td>Pengelolaan Kelas</td><td>10</td><td><input type="number" name="PengelolaanKelas" min="1" max="5" class="input skor" required></td></tr>
+          <tr><td>Kolaborasi & Komunikasi</td><td>5</td><td><input type="number" name="Kolaborasi" min="1" max="5" class="input skor" required></td></tr>
+          <tr><td>Pengembangan Profesional</td><td>3</td><td><input type="number" name="PengembanganProf" min="1" max="5" class="input skor" required></td></tr>
+          <tr><td>Keamanan & Kesehatan</td><td>2</td><td><input type="number" name="Keamanan" min="1" max="5" class="input skor" required></td></tr>
         </tbody>
       </table>
-
-      <p>Total Skor: <span id="totalSkor">0</span> / 100</p>
-      <button type="submit" class="btn">Kirim Penilaian</button>
+      <br>
+      <button type="button" class="btn" onclick="hitungTotal()">Hitung Total Skor</button>
+      <input type="text" name="totalSkor" class="input" id="totalSkor" placeholder="Total Skor" readonly>
+      <br><br>
+      <button type="submit" class="btn">Simpan / Kirim Penilaian</button>
+      <button type="button" class="btn" onclick="downloadExcel()">Download Excel</button>
+      <button type="button" class="btn" onclick="downloadWord()">Download Word</button>
     </form>
   </div>
 </div>
@@ -115,52 +86,71 @@
   Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script>
-(function(){emailjs.init("YOUR_USER_ID");})(); // Ganti USER_ID Anda
+const bobot = {
+  Kedisiplinan:10,
+  Inovasi:20,
+  Prestasi:20,
+  UpgradeKemampuan:30,
+  PengelolaanKelas:10,
+  Kolaborasi:5,
+  PengembanganProf:3,
+  Keamanan:2
+};
 
-const skorInputs = document.querySelectorAll('.skor');
-const totalSkorEl = document.getElementById('totalSkor');
-
+// hitung total skor
 function hitungTotal(){
-  let total = 0;
-  skorInputs.forEach(input=>{
-    const nilai = parseFloat(input.value)||0;
-    const bobot = parseFloat(input.dataset.bobot);
-    total += nilai / 5 * bobot;
-  });
-  totalSkorEl.innerText = total.toFixed(1);
+  let total=0;
+  for(const key in bobot){
+    const val = parseFloat(document.querySelector(`[name="${key}"]`).value) || 0;
+    total += val * bobot[key];
+  }
+  const totalSkor = total / 5; // max 100
+  document.getElementById('totalSkor').value = totalSkor.toFixed(2);
 }
 
-skorInputs.forEach(input=>input.addEventListener('input', hitungTotal));
+// ambil data form
+function getFormData(){
+  const data={};
+  document.querySelectorAll('#penilaianForm input, #penilaianForm select').forEach(el=>{
+    data[el.name]=el.value;
+  });
+  return data;
+}
 
-document.getElementById('kinerjaForm').addEventListener('submit', function(e){
+// download Excel
+function downloadExcel(){
+  const data = getFormData();
+  let table = '<table border="1"><tr><th>Indikator</th><th>Skor</th></tr>';
+  for(const key in bobot){
+    table += `<tr><td>${key}</td><td>${data[key]}</td></tr>`;
+  }
+  table += `<tr><td>Total</td><td>${data.totalSkor}</td></tr></table>`;
+  const blob = new Blob([table], {type:'application/vnd.ms-excel'});
+  saveAs(blob,'Penilaian_Guru.xls');
+}
+
+// download Word
+function downloadWord(){
+  const data = getFormData();
+  let html = `<html><head><meta charset='utf-8'><title>Penilaian Guru</title></head><body>`;
+  html += `<h2>Penilaian Guru: Nikmatu Zuhroh</h2>`;
+  html += `<p>Penilai: ${data.namaPenilai} (${data.jabatan})</p>`;
+  html += `<table border="1" cellpadding="5" cellspacing="0"><tr><th>Indikator</th><th>Skor</th></tr>`;
+  for(const key in bobot){
+    html += `<tr><td>${key}</td><td>${data[key]}</td></tr>`;
+  }
+  html += `<tr><td>Total Skor</td><td>${data.totalSkor}</td></tr></table></body></html>`;
+  const blob = new Blob(['\ufeff', html], {type:'application/msword'});
+  saveAs(blob,'Penilaian_Guru.doc');
+}
+
+// submit form
+document.getElementById('penilaianForm').addEventListener('submit', e=>{
   e.preventDefault();
   hitungTotal();
-  const form = e.target;
-  const data = {
-    namaPenilai: form.namaPenilai.value,
-    jabatan: form.jabatan.value,
-    guruDinilai: "Nikmatu Zuhroh",
-    kedisiplinan: form.querySelector('input[data-bobot="10"]').value,
-    inovasi: form.querySelector('input[data-bobot="20"]').value,
-    prestasi: form.querySelector('input[data-bobot="15"]').value,
-    upgrade: form.querySelector('input[data-bobot="25"]').value,
-    pengelolaan: form.querySelector('input[data-bobot="10"]').value,
-    kolaborasi: form.querySelector('input[data-bobot="5"]').value,
-    profesional: form.querySelector('input[data-bobot="10"]').value,
-    keamanan: form.querySelector('input[data-bobot="5"]').value,
-    totalSkor: totalSkorEl.innerText
-  };
-
-  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", data)
-    .then(function(response){
-      alert("Penilaian berhasil dikirim!");
-      form.reset();
-      totalSkorEl.innerText = "0";
-    }, function(error){
-      console.log("Gagal mengirim:", error);
-      alert("Gagal mengirim. Cek konsol untuk detail.");
-    });
+  alert("Penilaian siap diunduh. Gunakan tombol Excel/Word untuk menyimpan data.");
 });
 </script>
 </body>
