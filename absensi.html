@@ -38,36 +38,117 @@
 <!-- Kontainer -->
 <div class="container">
   <div class="hero">
-    <h1>Absensi Siswa</h1>
-    <div id="absensi-detail"></div>
+    <h1>Absensi Pertemuan</h1>
+    <p>Isi daftar hadir siswa setiap pertemuan. Data bisa diunduh sebagai JSON untuk arsip bulanan.</p>
+    
+    <!-- Form Absensi -->
+    <form id="absensiForm">
+      <label>Tanggal Pertemuan:</label>
+      <input type="date" id="tanggal" class="input" required>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nama Siswa</th>
+            <th>Hadir</th>
+            <th>Izin</th>
+            <th>Sakit</th>
+            <th>Alpa</th>
+          </tr>
+        </thead>
+        <tbody id="siswa-list"></tbody>
+      </table>
+      <button type="submit" class="btn">Simpan Absensi</button>
+      <button type="button" class="btn" onclick="downloadAbsensi()">Download JSON</button>
+    </form>
+  </div>
+
+  <!-- Data Absensi -->
+  <div class="hero">
+    <h2>Rekap Absensi Tersimpan</h2>
+    <div id="rekap-absensi"></div>
+    <p style="margin-top:30px;text-align:right;">
+      Kediri, <span id="today"></span><br>
+      Guru Ekstra Tari<br><br><br>
+      <strong>Nikmatu Zuhroh</strong>
+    </p>
   </div>
 </div>
 
 <!-- Footer -->
 <div class="footer">
-  <div>
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
-  </div>
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
 </div>
 
 <script>
-fetch('data/absensi.json').then(r=>r.json()).then(list=>{
-  const container=document.getElementById('absensi-detail');
-  list.forEach(pertemuan=>{
-    const div=document.createElement('div');
-    div.className="hero";
-    div.innerHTML=`<h2>Pertemuan ${pertemuan.tanggal}</h2>
-    <table class="table">
-      <thead><tr><th>Nama</th><th>Status</th></tr></thead>
-      <tbody>
-        ${pertemuan.siswa.map(s=>`<tr><td>${s.nama}</td><td>${s.status}</td></tr>`).join('')}
-      </tbody>
-    </table>`;
-    container.appendChild(div);
-  });
+// contoh daftar siswa (bisa diambil dari siswa.json)
+const siswa = [
+  "Ahmad Fauzi","Bunga Melati","Citra Dewi","Dewi Anggraini","Eko Prasetyo"
+];
+
+const siswaList = document.getElementById('siswa-list');
+siswa.forEach(nama=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td>${nama}</td>
+    <td><input type="radio" name="${nama}" value="Hadir" required></td>
+    <td><input type="radio" name="${nama}" value="Izin"></td>
+    <td><input type="radio" name="${nama}" value="Sakit"></td>
+    <td><input type="radio" name="${nama}" value="Alpa"></td>
+  `;
+  siswaList.appendChild(tr);
 });
+
+// simpan absensi
+document.getElementById('absensiForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const tanggal=document.getElementById('tanggal').value;
+  let pertemuan={tanggal,siswa:[]};
+  siswa.forEach(nama=>{
+    const status=document.querySelector(`input[name="${nama}"]:checked`).value;
+    pertemuan.siswa.push({nama,status});
+  });
+
+  let data=JSON.parse(localStorage.getItem('absensi'))||[];
+  data.push(pertemuan);
+  localStorage.setItem('absensi',JSON.stringify(data));
+  tampilkanRekap();
+  alert("Absensi tersimpan!");
+});
+
+// tampilkan rekap
+function tampilkanRekap(){
+  const data=JSON.parse(localStorage.getItem('absensi'))||[];
+  const rekap=document.getElementById('rekap-absensi');
+  rekap.innerHTML="";
+  data.forEach(pertemuan=>{
+    let table=`<h3>${pertemuan.tanggal}</h3>
+    <table class="table"><tr><th>Nama</th><th>Status</th></tr>`;
+    pertemuan.siswa.forEach(s=>{
+      table+=`<tr><td>${s.nama}</td><td>${s.status}</td></tr>`;
+    });
+    table+="</table>";
+    rekap.innerHTML+=table;
+  });
+}
+tampilkanRekap();
+
+// download JSON
+function downloadAbsensi(){
+  const data=localStorage.getItem('absensi');
+  if(!data){alert("Belum ada data!");return;}
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download="absensi.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// tanggal hari ini
+document.getElementById('today').innerText=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
 </script>
 </body>
 </html>
