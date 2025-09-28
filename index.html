@@ -5,31 +5,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Ekstra Tari - Wall</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <style>
-    /* Tambahan untuk responsif */
-    .nav {flex-wrap: wrap; gap: 8px;}
-    .nav a {padding:6px 10px; font-size:14px;}
-    img {max-width:100%; height:auto;}
-    table {width:100%; font-size:14px;}
-    th, td {padding:6px;}
-    @media(max-width:600px){
-      h1 {font-size:18px;}
-      h2 {font-size:16px;}
-      .header {flex-direction:column; text-align:center;}
-      .brand {margin-bottom:10px;}
-    }
-  </style>
 </head>
 <body>
 
 <!-- Header -->
 <div class="header">
   <div class="brand">
-    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;vertical-align:middle;">
-    <strong style="font-size:22px;vertical-align:middle;">Ekstra Tari</strong>
-    <div class="small">SDI Ulumiyah Al Makruf</div>
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah">
+    <div class="brand-text">
+      <div class="title">Ekstra Tari</div>
+      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
+    </div>
   </div>
-  <div style="text-align:right">
+  <div>
     <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
   </div>
 </div>
@@ -59,7 +47,7 @@
   <!-- Dokumentasi -->
   <div class="hero">
     <h1>Dokumentasi Kegiatan</h1>
-    <div id="galeri-preview" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px"></div>
+    <div id="galeri-preview"></div>
   </div>
 
   <!-- Ringkasan Absensi -->
@@ -108,7 +96,7 @@ fetch('data/kegiatan.json').then(r=>r.json()).then(d=>{
   const galeriEl=document.getElementById('galeri-preview');
   d.galeri.forEach(g=>{
     const fig=document.createElement('figure');
-    fig.innerHTML=`<img src="${g.img}" alt="${g.judul}" style="border-radius:8px"><figcaption>${g.tanggal} — ${g.judul}</figcaption>`;
+    fig.innerHTML=`<img src="${g.img}" alt="${g.judul}"><figcaption>${g.tanggal} — ${g.judul}</figcaption>`;
     galeriEl.appendChild(fig);
   });
 });
@@ -117,7 +105,11 @@ fetch('data/absensi.json').then(r=>r.json()).then(list=>{
   const tbody=document.getElementById('absensi-ringkasan');
   list.forEach(item=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td><td>${item.rekap.hadir}</td><td>${item.rekap.izin}</td><td>${item.rekap.sakit}</td><td>${item.rekap.alpa}</td>`;
+    tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td>
+                  <td>${item.rekap.hadir}</td>
+                  <td>${item.rekap.izin}</td>
+                  <td>${item.rekap.sakit}</td>
+                  <td>${item.rekap.alpa}</td>`;
     tbody.appendChild(tr);
   });
 });
