@@ -1,31 +1,18 @@
-<!doctype html>
-<html lang="id">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Absensi - Ekstra Tari</title><link rel="stylesheet" href="/assets/css/style.css"></head>
-<body>
-<div class="container">
-  <header class="header">
-    <div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Absensi</div><div style="font-size:12px;color:var(--muted)">Ekstra Tari</div></div></div>
-    <nav><ul><li><a href="index.html">Beranda</a></li><li><a href="absensi.html">Absensi</a></li><li><a href="rapor.html">Rapor</a></li></ul></nav>
-    <img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
-  </header>
-
-  <section class="hero">
-    <h1 id="absensi-title">Absensi</h1>
-    <p style="color:var(--muted)">Daftar kehadiran pertemuan (setiap Sabtu). Tombol download akan meng-export ke Excel.</p>
-    <div style="margin-top:12px;">
-      <table>
-        <thead><tr><th>Tanggal</th><th>Hadir</th><th>Izin</th><th>Alpha</th></tr></thead>
-        <tbody id="absensi-table-body"></tbody>
-      </table>
-    </div>
-    <div style="margin-top:12px"><button onclick="downloadAbsensiExcel()">Download Excel</button></div>
-  </section>
-
-  <footer class="footer"><div class="left"><strong>SDI Ulumiyah Al Makruf</strong><p>Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri</p></div><div class="social"><a href="index.html">Kembali</a></div></footer>
+<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Absensi</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<div class="header">
+  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
+  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="/assets/js/main.js"></script>
-<script src="/assets/js/absensi.js"></script>
-<script>loadAbsensi();</script>
-</body></html>
+<div class="nav">
+  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
+</div>
+<div class='container'><div class='hero'><h2>Absensi - Ceklist Pertemuan</h2><p class='small'>Pilih tanggal, centang yang hadir, jika tidak hadir pilih alasan. Simpan pertemuan lalu ekspor ke Word/Excel untuk arsip.</p><label for='tglPertemuan'>Tanggal Pertemuan</label><input type='date' id='tglPertemuan' class='input'><div id='absensi-list' style='margin-top:12px'></div><div style='margin-top:12px'><button class='btn' onclick='savePertemuan()'>Simpan Pertemuan</button> <button class='btn' onclick='exportPertemuanToWord()'>Download Word</button></div><h3 style='margin-top:18px'>Preview Tabel</h3><table class='table'><thead><tr><th>No</th><th>Nama</th><th>Kehadiran</th><th>Keterangan</th></tr></thead><tbody id='absensi-table-body'></tbody></table></div></div>
+<div class="footer">
+  <div style="max-width:1000px;margin:0 auto">
+    <strong>SDI Ulumiyah Al Makruf</strong><br>
+    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
+    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+  </div>
+</div>
+<script src='assets/js/main.js'></script><script src='assets/js/absensi.js'></script></body></html>

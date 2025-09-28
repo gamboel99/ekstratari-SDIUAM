@@ -1,4 +1,4 @@
-<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Ekstra Tari</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Pendaftaran</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
 <div class="header">
   <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
   <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
@@ -6,7 +6,7 @@
 <div class="nav">
   <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
 </div>
-<div class='container'><div class='hero'><h1>Wall Kegiatan — Tahun 2025</h1><div id='events'></div></div></div>
+<div class='container'><div class='hero'><h2>Pendaftaran & Pengunduran Diri</h2><form id='formPendaftaran' onsubmit='addSiswa(event)'><label>Nama<input id='p_nama' class='input'></label><label>Kelas<input id='p_kelas' class='input'></label><button class='btn' type='submit'>Tambah Siswa</button></form><h3 style='margin-top:18px'>Daftar Siswa (lokal)</h3><table class='table'><thead><tr><th>No</th><th>Nama</th><th>Kelas</th><th>Status</th><th>Aksi</th></tr></thead><tbody id='siswa-body'></tbody></table><div style='margin-top:12px'><button class='btn' onclick='downloadSiswaExcel()'>Download Daftar Siswa</button></div></div></div>
 <div class="footer">
   <div style="max-width:1000px;margin:0 auto">
     <strong>SDI Ulumiyah Al Makruf</strong><br>
@@ -15,4 +15,4 @@
     Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
   </div>
 </div>
-<script>fetch('data/kegiatan.json').then(r=>r.json()).then(d=>{const el=document.getElementById('events');d.events.forEach(ev=>{const div=document.createElement('div');div.className='hero';div.style.marginTop='12px';div.innerHTML=`<h3>${ev.judul}</h3><p class='small'>${ev.tanggal} — ${ev.deskripsi}</p>`;el.appendChild(div);});});</script></body></html>
+<script src='assets/js/pendaftaran.js'></script></body></html>

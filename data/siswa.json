@@ -1,0 +1,212 @@
+[
+  {
+    "no": 1,
+    "nama": "Faranesya Putri",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 2,
+    "nama": "Azzura R Putri",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 3,
+    "nama": "Fadila",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 4,
+    "nama": "Mighea Ruhi",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 5,
+    "nama": "Shalsa Arfa",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 6,
+    "nama": "Aliya Nabila",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 7,
+    "nama": "Intan A",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 8,
+    "nama": "Syafa Aqila",
+    "kelas": "2a",
+    "status": "aktif"
+  },
+  {
+    "no": 9,
+    "nama": "Adila Nisa",
+    "kelas": "2b",
+    "status": "aktif"
+  },
+  {
+    "no": 10,
+    "nama": "Alia Sakhaela",
+    "kelas": "2b",
+    "status": "aktif"
+  },
+  {
+    "no": 11,
+    "nama": "Qisya Kahiyana",
+    "kelas": "2b",
+    "status": "aktif"
+  },
+  {
+    "no": 12,
+    "nama": "Raisha Assyifa",
+    "kelas": "2b",
+    "status": "aktif"
+  },
+  {
+    "no": 13,
+    "nama": "Shela Yuliana",
+    "kelas": "2b",
+    "status": "aktif"
+  },
+  {
+    "no": 14,
+    "nama": "Nasita",
+    "kelas": "2b",
+    "status": "aktif"
+  },
+  {
+    "no": 15,
+    "nama": "Tiara",
+    "kelas": "2b",
+    "status": "aktif"
+  },
+  {
+    "no": 16,
+    "nama": "Aqila Rahma",
+    "kelas": "3",
+    "status": "aktif"
+  },
+  {
+    "no": 17,
+    "nama": "Diana",
+    "kelas": "3",
+    "status": "aktif"
+  },
+  {
+    "no": 18,
+    "nama": "Jazilatul",
+    "kelas": "3",
+    "status": "aktif"
+  },
+  {
+    "no": 19,
+    "nama": "Reffatina",
+    "kelas": "3",
+    "status": "aktif"
+  },
+  {
+    "no": 20,
+    "nama": "Saskia",
+    "kelas": "3",
+    "status": "aktif"
+  },
+  {
+    "no": 21,
+    "nama": "Kheysa Floren",
+    "kelas": "3",
+    "status": "aktif"
+  },
+  {
+    "no": 22,
+    "nama": "Alika",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 23,
+    "nama": "Ayunira",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 24,
+    "nama": "Ziya",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 25,
+    "nama": "Mikheyla",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 26,
+    "nama": "Nasywa Al Aura",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 27,
+    "nama": "Naurah",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 28,
+    "nama": "Shasmita",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 29,
+    "nama": "Zoya",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 30,
+    "nama": "Anisa D",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 31,
+    "nama": "Bintang",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 32,
+    "nama": "Syifa",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 33,
+    "nama": "Alisha",
+    "kelas": "4",
+    "status": "aktif"
+  },
+  {
+    "no": 34,
+    "nama": "R. Arsya",
+    "kelas": "5",
+    "status": "aktif"
+  },
+  {
+    "no": 35,
+    "nama": "Nafla",
+    "kelas": "5",
+    "status": "aktif"
+  }
+]

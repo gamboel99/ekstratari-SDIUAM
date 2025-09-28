@@ -1,11 +1,2 @@
-
-/* assets/js/main.js */
-document.addEventListener('DOMContentLoaded', function(){
-  // simple active nav highlight
-  const anchors = document.querySelectorAll('nav a');
-  anchors.forEach(a=>{
-    if(location.pathname.endsWith(a.getAttribute('href')) || (location.pathname.endsWith('/') && a.getAttribute('href')==='index.html')){
-      a.style.background='linear-gradient(90deg,var(--green-2),var(--green))'; a.style.color='white';
-    }
-  });
-});
+console.log('Ekstra Tari v3');
+async function loadSiswa(selector){const res=await fetch('data/siswa.json');const data=await res.json();const el=document.querySelector(selector);if(!el)return;el.innerHTML='';data.forEach(s=>{if(s.status && s.status.toLowerCase()==='nonaktif')return;const opt=document.createElement('option');opt.value=s.nama;opt.textContent=s.nama+' — '+s.kelas;el.appendChild(opt);});}

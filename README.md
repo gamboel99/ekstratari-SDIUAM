@@ -1,1 +1,1 @@
-# ekstratari-SDIUAM
+Ekstra Tari v3 - deploy instructions inside repository.

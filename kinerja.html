@@ -1,7 +1,18 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kinerja Guru - Ekstra Tari</title><link rel="stylesheet" href="/assets/css/style.css"></head><body><div class="container">
-  <header class="header"><div class="brand"><img src="/assets/img/logo-sekolah.jpg" alt="logo sekolah"><div><div class="title">Indikator Kinerja Guru</div><div style="font-size:12px;color:var(--muted)">Ekstra Tari</div></div></div><nav><ul><li><a href="index.html">Beranda</a></li><li><a href="kinerja.html">Kinerja</a></li></ul></nav><img src="/assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px"></header>
-  <section class="hero"><h1>Indikator Kinerja Guru — <span id="kinerja-year"></span></h1>
-  <table><thead><tr><th>Indikator</th><th>Skor</th><th>Keterangan</th></tr></thead><tbody id="kinerja-body"></tbody></table>
-  <div style="margin-top:12px"><button onclick="downloadKinerjaExcel()">Download Excel</button></div></section>
-  <footer class="footer"><div class="left"><strong>SDI Ulumiyah Al Makruf</strong></div><div class="social"><a href="index.html">Kembali</a></div></footer>
-</div><script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script><script src="/assets/js/main.js"></script><script src="/assets/js/kinerja.js"></script><script>loadKinerja();</script></body></html>
+<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Kinerja</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<div class="header">
+  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
+  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
+</div>
+<div class="nav">
+  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
+</div>
+<div class='container'><div class='hero'><h2>Indikator Kinerja Guru</h2><form id='kinerjaForm' onsubmit='tambahKinerjaForm(event)'><label>Nama<select id='kinerjaNama'></select></label><label>Indikator<input id='kinerjaIndikator' class='input'></label><label>Skor<input id='kinerjaSkor' class='input' type='number' min='0' max='5'></label><label>Catatan<textarea id='kinerjaCatatan' class='input'></textarea></label><button class='btn' type='submit'>Tambah Kinerja</button></form><h3 style='margin-top:18px'>Daftar Kinerja</h3><table class='table'><thead><tr><th>No</th><th>Nama</th><th>Indikator</th><th>Skor</th><th>Catatan</th><th>Tanggal</th></tr></thead><tbody id='kinerja-body'></tbody></table><div style='margin-top:12px'><button class='btn' onclick='downloadKinerjaCSV()'>Download CSV</button></div></div></div>
+<div class="footer">
+  <div style="max-width:1000px;margin:0 auto">
+    <strong>SDI Ulumiyah Al Makruf</strong><br>
+    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
+    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+  </div>
+</div>
+<script src='assets/js/main.js'></script><script src='assets/js/kinerja.js'></script></body></html>
