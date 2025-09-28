@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Absensi Siswa - Ekstra Tari</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <!-- FileSaver untuk download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
@@ -37,7 +36,6 @@
   <a href="admin.html">Admin</a>
 </div>
 
-<!-- Kontainer -->
 <div class="container">
   <div class="hero">
     <h1>Absensi Pertemuan</h1>
@@ -79,17 +77,19 @@
 </div>
 
 <script>
-let siswa=[];
+// ambil siswa dari localStorage (sinkron pendaftaran)
+function loadSiswa(){
+  return JSON.parse(localStorage.getItem('siswa')) || [];
+}
 
-// load siswa dari JSON
-fetch('data/siswa.json')
-.then(r=>r.json())
-.then(data=>{
-  siswa=data;
-  const tbody=document.getElementById('siswa-list');
-  siswa.forEach(s=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
+// tampilkan form absensi (hanya siswa Aktif)
+function renderSiswa(){
+  const tbody = document.getElementById('siswa-list');
+  tbody.innerHTML = "";
+  const aktif = loadSiswa().filter(s => s.status === "Aktif");
+  aktif.forEach(s=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
       <td>${s.nama}</td>
       <td>${s.kelas}</td>
       <td><input type="radio" name="${s.nama}" value="Hadir" required></td>
@@ -100,83 +100,81 @@ fetch('data/siswa.json')
     tbody.appendChild(tr);
   });
   tampilkanRekap();
-});
+}
 
 // simpan absensi
-document.getElementById('absensiForm').addEventListener('submit',e=>{
+document.getElementById('absensiForm').addEventListener('submit', e => {
   e.preventDefault();
-  const tanggal=document.getElementById('tanggal').value;
-  let pertemuan={tanggal,siswa:[]};
-  siswa.forEach(s=>{
-    const status=document.querySelector(`input[name="${s.nama}"]:checked`).value;
-    pertemuan.siswa.push({nama:s.nama,kelas:s.kelas,status});
+  const tanggal = document.getElementById('tanggal').value;
+  const aktif = loadSiswa().filter(s => s.status === "Aktif");
+  const pertemuan = {tanggal, siswa: []};
+  aktif.forEach(s => {
+    const status = document.querySelector(`input[name="${s.nama}"]:checked`).value;
+    pertemuan.siswa.push({nama: s.nama, kelas: s.kelas, status});
   });
-  let data=JSON.parse(localStorage.getItem('absensi'))||[];
+  let data = JSON.parse(localStorage.getItem('absensi')) || [];
   data.push(pertemuan);
-  localStorage.setItem('absensi',JSON.stringify(data));
+  localStorage.setItem('absensi', JSON.stringify(data));
   tampilkanRekap();
   alert("Absensi tersimpan!");
 });
 
-// tampilkan rekap di halaman
+// tampilkan rekap absensi
 function tampilkanRekap(){
-  const data=JSON.parse(localStorage.getItem('absensi'))||[];
-  const rekap=document.getElementById('rekap-absensi');
-  rekap.innerHTML="";
+  const data = JSON.parse(localStorage.getItem('absensi')) || [];
+  const rekap = document.getElementById('rekap-absensi');
+  rekap.innerHTML = "";
   data.forEach(p=>{
-    let table=`<h3>${p.tanggal}</h3><table class="table"><tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
+    let table = `<h3>${p.tanggal}</h3><table class="table"><tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
     p.siswa.forEach(s=>{
-      table+=`<tr><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
+      table += `<tr><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
     });
-    table+=`</table>
-    <p style="margin-top:20px;text-align:right;">
-      Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
-      Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
-    </p>`;
-    rekap.innerHTML+=table;
+    table += `</table>
+      <p style="margin-top:20px;text-align:right;">
+        Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
+        Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
+      </p>`;
+    rekap.innerHTML += table;
   });
 }
 
 // download JSON
 function downloadAbsensiJSON(){
-  const data=localStorage.getItem('absensi');
-  if(!data){alert("Belum ada data!");return;}
-  const blob=new Blob([data],{type:'application/json'});
-  saveAs(blob,"absensi.json");
+  const data = localStorage.getItem('absensi');
+  if(!data){ alert("Belum ada data!"); return; }
+  const blob = new Blob([data], {type:'application/json'});
+  saveAs(blob, "absensi.json");
 }
 
 // download Word
 function downloadAbsensiWord(){
-  const data=JSON.parse(localStorage.getItem('absensi'))||[];
-  if(data.length===0){alert("Belum ada data!");return;}
-
-  let htmlContent = `
-  <html xmlns:o='urn:schemas-microsoft-com:office:office'
+  const data = JSON.parse(localStorage.getItem('absensi')) || [];
+  if(data.length === 0){ alert("Belum ada data!"); return; }
+  let html = `<html xmlns:o='urn:schemas-microsoft-com:office:office'
         xmlns:w='urn:schemas-microsoft-com:office:word'
         xmlns='http://www.w3.org/TR/REC-html40'>
-  <head><meta charset='utf-8'><title>Absensi</title></head><body>
-  <h2 style="text-align:center">ABSENSI EKSTRA TARI SDI ULUMIYAH AL MAKRUf</h2>
-  `;
-
+    <head><meta charset='utf-8'><title>Absensi</title></head><body>
+    <h2 style="text-align:center">ABSENSI EKSTRA TARI SDI ULUMIYAH AL MAKRUf</h2>`;
   data.forEach(p=>{
-    htmlContent += `<h3>Pertemuan: ${p.tanggal}</h3>`;
-    htmlContent += `<table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
-    <tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
+    html += `<h3>Pertemuan: ${p.tanggal}</h3>`;
+    html += `<table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
+      <tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
     p.siswa.forEach(s=>{
-      htmlContent += `<tr><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
+      html += `<tr><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
     });
-    htmlContent += `</table>
-    <p style="text-align:right;margin-top:30px;">
-      Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
-      Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
-    </p><br>`;
+    html += `</table>
+      <p style="text-align:right;margin-top:30px;">
+        Kediri, ${new Date().toLocaleDateString('id-ID')}<br>
+        Guru Ekstra Tari<br><br><br><strong>Nikmatu Zuhroh</strong>
+      </p><br>`;
   });
-
-  htmlContent += `</body></html>`;
-
-  const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+  html += `</body></html>`;
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
   saveAs(blob, "Absensi_Ekstra_Tari.doc");
 }
+
+// INIT
+renderSiswa();
 </script>
 </body>
 </html>
