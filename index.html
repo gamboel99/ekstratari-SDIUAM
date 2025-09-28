@@ -11,7 +11,7 @@
 <!-- Header -->
 <div class="header">
   <div class="brand">
-    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
     <div class="brand-text">
       <div class="title">Ekstra Tari</div>
       <div class="subtitle">SDI Ulumiyah Al Makruf</div>
@@ -37,7 +37,6 @@
 
 <!-- Kontainer -->
 <div class="container">
-
   <!-- Agenda -->
   <div class="hero">
     <h1>Agenda Kegiatan — Tahun 2025</h1>
@@ -47,7 +46,7 @@
   <!-- Dokumentasi -->
   <div class="hero">
     <h1>Dokumentasi Kegiatan</h1>
-    <div id="galeri-preview"></div>
+    <div id="galeri-preview" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px"></div>
   </div>
 
   <!-- Ringkasan Absensi -->
@@ -74,45 +73,90 @@
 </div>
 
 <script>
-fetch('data/kegiatan.json').then(r=>r.json()).then(d=>{
-  const agendaEl=document.getElementById('agenda-list');
-  let bulanMap={};
-  d.agenda.forEach(ev=>{
-    const bulan=new Date(ev.tanggal).toLocaleString('id-ID',{month:'long',year:'numeric'});
-    if(!bulanMap[bulan]) bulanMap[bulan]=[];
-    bulanMap[bulan].push(ev);
-  });
-  for(const bln in bulanMap){
-    const sec=document.createElement('div');
-    sec.innerHTML=`<h3>${bln}</h3>`;
-    bulanMap[bln].forEach(ev=>{
-      const div=document.createElement('div');
-      div.innerHTML=`<strong>${ev.judul}</strong><br><span>${ev.tanggal} — ${ev.deskripsi}</span>`;
-      sec.appendChild(div);
+// ========== Agenda & Galeri ==========
+fetch('data/kegiatan.json')
+  .then(r=>r.json())
+  .then(d=>{
+    const agendaEl=document.getElementById('agenda-list');
+    let bulanMap={};
+    d.agenda.forEach(ev=>{
+      const bulan=new Date(ev.tanggal).toLocaleString('id-ID',{month:'long',year:'numeric'});
+      if(!bulanMap[bulan]) bulanMap[bulan]=[];
+      bulanMap[bulan].push(ev);
     });
-    agendaEl.appendChild(sec);
-  }
+    for(const bln in bulanMap){
+      const sec=document.createElement('div');
+      sec.innerHTML=`<h3>${bln}</h3>`;
+      bulanMap[bln].forEach(ev=>{
+        const div=document.createElement('div');
+        div.innerHTML=`<strong>${ev.judul}</strong><br><span>${ev.tanggal} — ${ev.deskripsi}</span>`;
+        sec.appendChild(div);
+      });
+      agendaEl.appendChild(sec);
+    }
 
-  const galeriEl=document.getElementById('galeri-preview');
-  d.galeri.forEach(g=>{
-    const fig=document.createElement('figure');
-    fig.innerHTML=`<img src="${g.img}" alt="${g.judul}"><figcaption>${g.tanggal} — ${g.judul}</figcaption>`;
-    galeriEl.appendChild(fig);
+    const galeriEl=document.getElementById('galeri-preview');
+    d.galeri.forEach(g=>{
+      const fig=document.createElement('figure');
+      fig.innerHTML=`<img src="${g.img}" alt="${g.judul}" style="border-radius:8px"><figcaption>${g.tanggal} — ${g.judul}</figcaption>`;
+      galeriEl.appendChild(fig);
+    });
   });
-});
 
-fetch('data/absensi.json').then(r=>r.json()).then(list=>{
+// ========== Absensi Mingguan ==========
+function getStartOfWeek(date) {
+  const d = new Date(date);
+  const day = d.getDay(); // Minggu=0, Senin=1
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // geser ke Senin
+  const monday = new Date(d.setDate(diff));
+  monday.setHours(0,0,0,0);
+  return monday;
+}
+
+function getEndOfWeek(date) {
+  const start = getStartOfWeek(date);
+  return new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6, 23,59,59);
+}
+
+function renderRingkasan(list){
   const tbody=document.getElementById('absensi-ringkasan');
-  list.forEach(item=>{
+  tbody.innerHTML="";
+
+  const today = new Date();
+  const startWeek = getStartOfWeek(today);
+  const endWeek   = getEndOfWeek(today);
+
+  // filter hanya absensi minggu ini
+  const filtered = list.filter(item=>{
+    const tgl = new Date(item.tanggal);
+    return tgl >= startWeek && tgl <= endWeek;
+  });
+
+  filtered.forEach(item=>{
+    let hadir=item.siswa.filter(s=>s.status==="Hadir").length;
+    let izin=item.siswa.filter(s=>s.status==="Izin").length;
+    let sakit=item.siswa.filter(s=>s.status==="Sakit").length;
+    let alpa=item.siswa.filter(s=>s.status==="Alpa").length;
+
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><a href="absensi.html">${item.tanggal}</a></td>
-                  <td>${item.rekap.hadir}</td>
-                  <td>${item.rekap.izin}</td>
-                  <td>${item.rekap.sakit}</td>
-                  <td>${item.rekap.alpa}</td>`;
+    tr.innerHTML=`
+      <td><a href="absensi.html">${item.tanggal}</a></td>
+      <td>${hadir}</td>
+      <td>${izin}</td>
+      <td>${sakit}</td>
+      <td>${alpa}</td>
+    `;
     tbody.appendChild(tr);
   });
-});
+
+  if(filtered.length === 0){
+    tbody.innerHTML = `<tr><td colspan="5">Belum ada absensi minggu ini</td></tr>`;
+  }
+}
+
+// load dari localStorage
+let local=JSON.parse(localStorage.getItem('absensi'))||[];
+if(local.length>0) renderRingkasan(local);
 </script>
 </body>
 </html>
