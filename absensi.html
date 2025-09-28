@@ -6,9 +6,13 @@
 <title>Absensi Siswa - Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+  .table th, .table td { text-align:center; padding:8px; }
+</style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="header">
   <div class="brand">
     <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
@@ -22,6 +26,7 @@
   </div>
 </div>
 
+<!-- Navigasi -->
 <div class="nav">
   <a href="index.html">Beranda</a>
   <a href="galeri.html">Galeri</a>
@@ -34,14 +39,15 @@
   <a href="admin.html">Admin</a>
 </div>
 
+<!-- Kontainer -->
 <div class="container">
   <div class="hero">
     <h1>Absensi Pertemuan</h1>
     <form id="absensiForm">
       <label for="tanggal">Tanggal Pertemuan:</label>
       <input type="date" id="tanggal" class="input" required>
-
-      <table class="table">
+      <br><br>
+      <table class="table" border="1">
         <thead>
           <tr>
             <th>Nama Siswa</th>
@@ -54,7 +60,7 @@
         </thead>
         <tbody id="siswa-list"></tbody>
       </table>
-
+      <br>
       <button type="submit" class="btn">Simpan Absensi</button>
       <button type="button" class="btn" onclick="downloadAbsensiJSON()">Download JSON</button>
       <button type="button" class="btn" onclick="downloadAbsensiWord()">Download Word</button>
@@ -67,6 +73,7 @@
   </div>
 </div>
 
+<!-- Footer -->
 <div class="footer">
   <strong>SDI Ulumiyah Al Makruf</strong><br>
   Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
@@ -76,6 +83,17 @@
 <script>
 // ambil siswa dari localStorage
 function loadSiswa(){ return JSON.parse(localStorage.getItem('siswa')) || []; }
+
+// warna untuk tiap status
+function warnaStatus(status){
+  switch(status){
+    case "Hadir": return "background-color:#90EE90"; // hijau muda
+    case "Izin": return "background-color:#FFFF99";  // kuning muda
+    case "Sakit": return "background-color:#ADD8E6"; // biru muda
+    case "Alpa": return "background-color:#FF7F7F";  // merah muda
+    default: return "";
+  }
+}
 
 // render form absensi (hanya Aktif)
 function renderSiswa(){
@@ -87,10 +105,10 @@ function renderSiswa(){
     tr.innerHTML = `
       <td>${s.nama}</td>
       <td>${s.kelas}</td>
-      <td><input type="radio" name="${s.nama}" value="Hadir" required></td>
-      <td><input type="radio" name="${s.nama}" value="Izin"></td>
-      <td><input type="radio" name="${s.nama}" value="Sakit"></td>
-      <td><input type="radio" name="${s.nama}" value="Alpa"></td>
+      <td style="${warnaStatus('Hadir')}"><input type="radio" name="${s.nama}" value="Hadir" required></td>
+      <td style="${warnaStatus('Izin')}"><input type="radio" name="${s.nama}" value="Izin"></td>
+      <td style="${warnaStatus('Sakit')}"><input type="radio" name="${s.nama}" value="Sakit"></td>
+      <td style="${warnaStatus('Alpa')}"><input type="radio" name="${s.nama}" value="Alpa"></td>
     `;
     tbody.appendChild(tr);
   });
@@ -119,9 +137,9 @@ function tampilkanRekap(){
   const rekap = document.getElementById('rekap-absensi');
   rekap.innerHTML = "";
   data.forEach(p=>{
-    let table = `<h3>${p.tanggal}</h3><table class="table"><tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
+    let table = `<h3>${p.tanggal}</h3><table class="table" border="1"><tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
     p.siswa.forEach(s=>{
-      table += `<tr><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
+      table += `<tr style="${warnaStatus(s.status)}"><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
     });
     table += `</table>
       <p style="margin-top:20px;text-align:right;">
@@ -154,7 +172,7 @@ function downloadAbsensiWord(){
     html += `<table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
       <tr><th>Nama</th><th>Kelas</th><th>Status</th></tr>`;
     p.siswa.forEach(s=>{
-      html += `<tr><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
+      html += `<tr style="${warnaStatus(s.status)}"><td>${s.nama}</td><td>${s.kelas}</td><td>${s.status}</td></tr>`;
     });
     html += `</table>
       <p style="text-align:right;margin-top:30px;">
@@ -167,21 +185,15 @@ function downloadAbsensiWord(){
   saveAs(blob, "Absensi_Ekstra_Tari.doc");
 }
 
-// ===== Live Sync =====
-function liveSync(){
-  renderSiswa();
-}
-
-// update otomatis tiap 3 detik
+// live sync
+function liveSync(){ renderSiswa(); }
 setInterval(liveSync, 3000);
-
-// juga update saat localStorage berubah di tab lain
-window.addEventListener('storage', e=>{
-  if(e.key === 'siswa'){ renderSiswa(); }
-});
+window.addEventListener('storage', e=>{ if(e.key==='siswa'){ renderSiswa(); } });
 
 // init
 renderSiswa();
+tampilkanRekap();
 </script>
+
 </body>
 </html>
