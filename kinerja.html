@@ -3,17 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Penilaian Kinerja Guru Ekstra Tari</title>
+<title>Kinerja Guru Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-  (function(){emailjs.init("YOUR_USER_ID");})(); // Ganti dengan ID EmailJS Anda
-</script>
-<style>
-  table {width:100%; border-collapse:collapse; margin-bottom:20px;}
-  th, td {border:1px solid #ccc; padding:8px; text-align:center;}
-  th {background:#f0f0f0;}
-</style>
 </head>
 <body>
 
@@ -44,88 +36,79 @@
   <a href="admin.html">Admin</a>
 </div>
 
-<!-- Kontainer -->
 <div class="container">
   <div class="hero">
     <h1>Form Penilaian Kinerja Guru Ekstra Tari</h1>
     <p>Guru yang dinilai: <strong>Nikmatu Zuhroh</strong></p>
 
-    <form id="formKinerja">
+    <form id="kinerjaForm">
       <label>Nama Penilai:</label>
-      <input type="text" name="namaPenilai" class="input" required>
+      <input type="text" id="namaPenilai" class="input" required>
 
       <label>Jabatan / Peran:</label>
-      <select name="jabatan" class="input" required>
+      <select id="jabatan" class="input" required>
         <option value="">-- Pilih --</option>
-        <option value="Guru SDI Ulumiyah Al Makruf">Guru SDI Ulumiyah Al Makruf</option>
+        <option value="Guru SDI">Guru SDI</option>
         <option value="Kepala Sekolah">Kepala Sekolah</option>
         <option value="Ketua Yayasan">Ketua Yayasan</option>
         <option value="Owner">Owner</option>
       </select>
 
-      <h3>Isi Penilaian (Skala 1–5)</h3>
-
-      <table>
+      <h3>Nilai Indikator (1–5)</h3>
+      <table class="table">
         <thead>
-          <tr>
-            <th>Indikator</th>
-            <th>Bobot (%)</th>
-            <th>Nilai (1–5)</th>
-            <th>Nilai Tertimbang (0–100)</th>
-          </tr>
+          <tr><th>Indikator</th><th>Bobot (%)</th><th>Nilai (1–5)</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td>Kedisiplinan</td><td>10</td>
-            <td><input type="number" name="kedisiplinan" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Kedisiplinan</td>
+            <td>10</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="10" required></td>
           </tr>
           <tr>
-            <td>Inovasi</td><td>20</td>
-            <td><input type="number" name="inovasi" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Inovasi</td>
+            <td>20</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="20" required></td>
           </tr>
           <tr>
-            <td>Prestasi</td><td>20</td>
-            <td><input type="number" name="prestasi" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Prestasi</td>
+            <td>15</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="15" required></td>
           </tr>
           <tr>
-            <td>Upgrade Kemampuan Anak</td><td>20</td>
-            <td><input type="number" name="upgrade" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Upgrade Kemampuan Anak</td>
+            <td>25</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="25" required></td>
           </tr>
           <tr>
-            <td>Pengelolaan Kelas / Kegiatan</td><td>10</td>
-            <td><input type="number" name="pengelolaan" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Pengelolaan Kelas / Kegiatan</td>
+            <td>10</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="10" required></td>
           </tr>
           <tr>
-            <td>Kolaborasi & Komunikasi</td><td>10</td>
-            <td><input type="number" name="kolaborasi" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Kolaborasi & Komunikasi</td>
+            <td>5</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="5" required></td>
           </tr>
           <tr>
-            <td>Pengembangan Profesional</td><td>5</td>
-            <td><input type="number" name="profesional" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Pengembangan Profesional</td>
+            <td>10</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="10" required></td>
           </tr>
           <tr>
-            <td>Keamanan & Kesehatan</td><td>5</td>
-            <td><input type="number" name="keamanan" class="input nilai" min="1" max="5" required></td>
-            <td class="hasil"></td>
+            <td>Keamanan & Kesehatan</td>
+            <td>5</td>
+            <td><input type="number" min="1" max="5" class="input skor" data-bobot="5" required></td>
           </tr>
         </tbody>
       </table>
 
-      <p>Total Skor Akhir (0–100): <strong id="totalSkor">0</strong></p>
-
+      <p>Total Skor: <span id="totalSkor">0</span> / 100</p>
       <button type="submit" class="btn">Kirim Penilaian</button>
     </form>
   </div>
 </div>
 
-<!-- Footer -->
 <div class="footer">
   <strong>SDI Ulumiyah Al Makruf</strong><br>
   Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
@@ -133,55 +116,52 @@
 </div>
 
 <script>
+(function(){emailjs.init("YOUR_USER_ID");})(); // Ganti USER_ID Anda
+
+const skorInputs = document.querySelectorAll('.skor');
+const totalSkorEl = document.getElementById('totalSkor');
+
 function hitungTotal(){
-  const rows = document.querySelectorAll('tbody tr');
   let total = 0;
-  rows.forEach(r=>{
-    const nilaiInput = r.querySelector('.nilai');
-    const bobot = parseFloat(r.cells[1].innerText);
-    let nilai = parseFloat(nilaiInput.value) || 0;
-    // Konversi ke 0-100: nilai tertimbang = (nilai / 5) * bobot
-    const tertimbang = ((nilai/5)*bobot).toFixed(2);
-    r.querySelector('.hasil').innerText = tertimbang;
-    total += parseFloat(tertimbang);
+  skorInputs.forEach(input=>{
+    const nilai = parseFloat(input.value)||0;
+    const bobot = parseFloat(input.dataset.bobot);
+    total += nilai / 5 * bobot;
   });
-  document.getElementById('totalSkor').innerText = total.toFixed(2);
+  totalSkorEl.innerText = total.toFixed(1);
 }
 
-document.querySelectorAll('.nilai').forEach(input=>{
-  input.addEventListener('input', hitungTotal);
-});
+skorInputs.forEach(input=>input.addEventListener('input', hitungTotal));
 
-document.getElementById('formKinerja').addEventListener('submit', function(e){
+document.getElementById('kinerjaForm').addEventListener('submit', function(e){
   e.preventDefault();
+  hitungTotal();
   const form = e.target;
   const data = {
     namaPenilai: form.namaPenilai.value,
     jabatan: form.jabatan.value,
-    kedisiplinan: form.kedisiplinan.value,
-    inovasi: form.inovasi.value,
-    prestasi: form.prestasi.value,
-    upgrade: form.upgrade.value,
-    pengelolaan: form.pengelolaan.value,
-    kolaborasi: form.kolaborasi.value,
-    profesional: form.profesional.value,
-    keamanan: form.keamanan.value,
-    totalSkor: document.getElementById('totalSkor').innerText
+    guruDinilai: "Nikmatu Zuhroh",
+    kedisiplinan: form.querySelector('input[data-bobot="10"]').value,
+    inovasi: form.querySelector('input[data-bobot="20"]').value,
+    prestasi: form.querySelector('input[data-bobot="15"]').value,
+    upgrade: form.querySelector('input[data-bobot="25"]').value,
+    pengelolaan: form.querySelector('input[data-bobot="10"]').value,
+    kolaborasi: form.querySelector('input[data-bobot="5"]').value,
+    profesional: form.querySelector('input[data-bobot="10"]').value,
+    keamanan: form.querySelector('input[data-bobot="5"]').value,
+    totalSkor: totalSkorEl.innerText
   };
 
-  emailjs.send('YOUR_SERVICE_ID','YOUR_TEMPLATE_ID', data)
-    .then(() => {
-      alert("Penilaian berhasil dikirim ke email!");
+  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", data)
+    .then(function(response){
+      alert("Penilaian berhasil dikirim!");
       form.reset();
-      hitungTotal();
-    })
-    .catch(err=>{
-      console.error(err);
-      alert("Gagal mengirim, cek konsol.");
+      totalSkorEl.innerText = "0";
+    }, function(error){
+      console.log("Gagal mengirim:", error);
+      alert("Gagal mengirim. Cek konsol untuk detail.");
     });
 });
-
-hitungTotal();
 </script>
 </body>
 </html>
