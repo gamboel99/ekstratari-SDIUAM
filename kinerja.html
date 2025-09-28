@@ -6,7 +6,6 @@
 <title>Penilaian Kinerja Guru - Ekstra Tari</title>
 <link rel="stylesheet" href="assets/css/style.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -70,13 +69,28 @@
           <tr><td>Keamanan & Kesehatan</td><td>2</td><td><input type="number" name="Keamanan" min="1" max="5" class="input skor" required></td></tr>
         </tbody>
       </table>
+
+      <p style="margin-top:10px; color:darkgreen;">
+        <strong>Keterangan Skor (1-5):</strong><br>
+        1 = Sangat Buruk / Tidak Ada<br>
+        2 = Buruk / Kurang<br>
+        3 = Cukup / Ada tapi perlu perbaikan<br>
+        4 = Baik / Memadai<br>
+        5 = Sangat Baik / Optimal
+      </p>
+
       <br>
       <button type="button" class="btn" onclick="hitungTotal()">Hitung Total Skor</button>
       <input type="text" name="totalSkor" class="input" id="totalSkor" placeholder="Total Skor" readonly>
       <br><br>
-      <button type="submit" class="btn">Kirim Penilaian via Email</button>
-      <button type="button" class="btn" onclick="downloadExcel()">Download Excel</button>
+
+      <p style="color:darkblue;">
+        Gunakan tombol Word/Excel untuk mengunduh penilaian. Setelah itu, kirimkan file Word ke WhatsApp guru Nikmatu Zuhroh.
+      </p>
+
       <button type="button" class="btn" onclick="downloadWord()">Download Word</button>
+      <button type="button" class="btn" onclick="downloadExcel()">Download Excel</button>
+      <button type="button" class="btn" onclick="kirimWA()">Kirim ke WhatsApp</button>
     </form>
   </div>
 </div>
@@ -87,9 +101,8 @@
   Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script>
-emailjs.init("YOUR_USER_ID"); // ganti dengan user ID EmailJS Anda
-
 const bobot = {
   Kedisiplinan:10,
   Inovasi:20,
@@ -148,23 +161,27 @@ function downloadWord(){
   saveAs(blob,'Penilaian_Guru.doc');
 }
 
-// kirim email via EmailJS
+// tombol WA
+function kirimWA(){
+  const data = getFormData();
+  hitungTotal();
+  let pesan = `Penilaian Guru Ekstra Tari - Nikmatu Zuhroh\n`;
+  pesan += `Penilai: ${data.namaPenilai} (${data.jabatan})\n\n`;
+  for(const key in bobot){
+    pesan += `${key}: ${data[key]}\n`;
+  }
+  pesan += `Total Skor: ${data.totalSkor}\n\n`;
+  pesan += `Silakan lihat lampiran Word/Excel untuk detail.`;
+
+  const waLink = `https://wa.me/6282330321441?text=${encodeURIComponent(pesan)}`;
+  window.open(waLink, '_blank');
+}
+
+// submit form
 document.getElementById('penilaianForm').addEventListener('submit', e=>{
   e.preventDefault();
   hitungTotal();
-  const data = getFormData();
-  emailjs.send("YOUR_SERVICE_ID","YOUR_TEMPLATE_ID",{
-    to_email:"mitrautamaconsultindo@gmail.com",
-    namaPenilai: data.namaPenilai,
-    jabatan: data.jabatan,
-    skor: JSON.stringify(data),
-    totalSkor: data.totalSkor
-  }).then(()=>{
-    alert("Penilaian terkirim ke email mitrautamaconsultindo@gmail.com!");
-  }).catch(err=>{
-    console.error(err);
-    alert("Gagal mengirim email. Cek konsol untuk detail.");
-  });
+  alert("Penilaian siap diunduh atau dikirim via WhatsApp.");
 });
 </script>
 </body>
