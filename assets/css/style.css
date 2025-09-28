@@ -1,18 +1,136 @@
-:root{
+:root {
   --green:#1b5e20;
   --gold:#f9a825;
   --pattern:url('https://www.transparenttextures.com/patterns/asfalt-light.png');
 }
-body{margin:0;font-family:Arial,sans-serif;background:#fafafa;color:#333}
-.header{background:var(--green);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:700;text-shadow:1px 1px 2px rgba(0,0,0,0.3)}
-.nav{background:#fff;padding:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.nav a{text-decoration:none;color:var(--green);font-weight:bold}
-.footer{background:var(--green);color:#fff;padding:20px;text-align:center;font-size:14px;margin-top:20px}
-.footer a{color:var(--gold)}
-.container{background-image:var(--pattern);background-size:180px 180px;padding:20px}
-.hero{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.1);margin-bottom:20px}
-h1,h2{color:var(--green)}
-.input,textarea{width:100%;padding:8px;margin:4px 0 12px;border:1px solid #ccc;border-radius:6px}
-.btn{background:var(--green);color:#fff;padding:8px 16px;border:none;border-radius:6px;cursor:pointer}
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{border:1px solid #ccc;padding:6px;text-align:center}
+
+/* Umum */
+body {
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#fafafa;
+  color:#333;
+}
+
+/* Header */
+.header {
+  background:var(--green);
+  color:#fff;
+  padding:16px 24px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  text-align:center;
+}
+.header .brand {
+  font-size:20px;
+  font-weight:700;
+  text-shadow:1px 1px 2px rgba(0,0,0,0.3);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* Navigasi */
+.nav {
+  background:#fff;
+  padding:10px;
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+.nav a {
+  text-decoration:none;
+  color:var(--green);
+  font-weight:bold;
+  padding:6px 10px;
+  border-radius:4px;
+  transition:all .2s;
+}
+.nav a:hover {
+  background:var(--green);
+  color:#fff;
+}
+
+/* Footer */
+.footer {
+  background:var(--green);
+  color:#fff;
+  padding:20px;
+  text-align:center;
+  font-size:14px;
+  margin-top:20px;
+}
+.footer a {color:var(--gold)}
+
+/* Container & Card */
+.container {
+  background-image:var(--pattern);
+  background-size:180px 180px;
+  padding:20px;
+}
+.hero {
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+  margin-bottom:20px;
+}
+
+/* Typography */
+h1,h2,h3 {color:var(--green);margin-top:0}
+h1 {font-size:22px}
+h2 {font-size:18px}
+h3 {font-size:16px;margin-bottom:6px}
+.small {font-size:12px;color:#666}
+
+/* Form */
+.input, textarea {
+  width:100%;
+  padding:8px;
+  margin:4px 0 12px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+.btn {
+  background:var(--green);
+  color:#fff;
+  padding:8px 16px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+.btn:hover {background:#144d16}
+
+/* Tabel */
+.table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+.table th, .table td {
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+}
+.table th {background:#f0f0f0}
+
+/* Galeri grid */
+#galeri-preview, #galeri-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:12px;
+}
+figure {margin:0}
+figure img {width:100%;border-radius:8px}
+
+/* Responsif */
+@media(max-width:600px){
+  h1 {font-size:18px}
+  h2 {font-size:16px}
+  .header {flex-direction:column;align-items:center}
+  .brand {flex-direction:column}
+  table {font-size:12px}
+}
