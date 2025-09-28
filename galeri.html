@@ -3,13 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Galeri Ekstra Tari</title>
+<title>Ekstra Tari - Galeri</title>
 <link rel="stylesheet" href="assets/css/style.css">
-<style>
-#galeri-wall {display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;}
-.wall-item {border:1px solid #ccc;padding:5px;border-radius:5px;background:#f9f9f9;text-align:center;}
-.wall-item img, .wall-item video {max-width:100%;border-radius:5px;margin-top:5px;}
-</style>
 </head>
 <body>
 
@@ -42,37 +37,32 @@
 
 <div class="container">
   <div class="hero">
-    <h1>Galeri Kegiatan</h1>
-    <div id="galeri-wall"></div>
+    <h1>Galeri Ekstra Tari</h1>
+    <div id="galeri-wall" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px"></div>
   </div>
 </div>
 
+<!-- Footer -->
 <div class="footer">
-  <div>
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
-  </div>
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
 </div>
 
 <script>
-// ===== Load Media =====
-function loadGaleri(){
-  const data = JSON.parse(localStorage.getItem('media')) || [];
-  const wall = document.getElementById('galeri-wall');
-  wall.innerHTML = '';
-  data.slice().reverse().forEach(m=>{
-    const div = document.createElement('div');
-    div.className='wall-item';
-    if(m.type==='image') div.innerHTML=`<img src="${m.url}" alt="media">`;
-    else div.innerHTML=`<video src="${m.url}" controls></video>`;
-    wall.appendChild(div);
+function loadMedia(){ return JSON.parse(localStorage.getItem('media'))||[]; }
+function renderGaleriWall(){
+  const gal=document.getElementById('galeri-wall');
+  gal.innerHTML="";
+  loadMedia().slice().reverse().forEach(m=>{
+    const fig=document.createElement('figure');
+    if(m.type==='image') fig.innerHTML=`<img src="${m.url}" alt="media" style="border-radius:8px"><figcaption>${m.url}</figcaption>`;
+    else fig.innerHTML=`<video src="${m.url}" controls style="border-radius:8px;max-width:100%"></video><figcaption>${m.url}</figcaption>`;
+    gal.appendChild(fig);
   });
 }
 
-// ===== Init =====
-loadGaleri();
-setInterval(loadGaleri,5000);
+renderGaleriWall();
 </script>
 </body>
 </html>
