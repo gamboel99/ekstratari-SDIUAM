@@ -69,18 +69,19 @@
 </div>
 
 <script>
-// ===== Fungsi Load Data =====
+// ===== Load & Save Data =====
 function loadSiswa(){ return JSON.parse(localStorage.getItem('siswa')) || []; }
 function loadAbsensi(){ return JSON.parse(localStorage.getItem('absensi')) || []; }
 function loadRapor(){ return JSON.parse(localStorage.getItem('rapor')) || []; }
+function saveRapor(data){ localStorage.setItem('rapor', JSON.stringify(data)); }
 
-// ===== Hitung Rekap Absensi per Siswa =====
+// ===== Hitung Absensi =====
 function hitungAbsensi(nama){
   const abs = loadAbsensi();
   let hadir=0, izin=0, sakit=0, alpa=0;
   abs.forEach(p=>{
     p.siswa.forEach(s=>{
-      if(s.nama === nama){
+      if(s.nama===nama){
         if(s.status==="Hadir") hadir++;
         else if(s.status==="Izin") izin++;
         else if(s.status==="Sakit") sakit++;
@@ -91,29 +92,29 @@ function hitungAbsensi(nama){
   return {hadir, izin, sakit, alpa};
 }
 
-// ===== Render Form Rapor (dengan warna ranking) =====
+// ===== Render Form Rapor =====
 function renderRapor(){
   const tbody = document.getElementById('rapor-list');
   tbody.innerHTML = "";
-  const siswaAktif = loadSiswa().filter(s => s.status==="Aktif");
-  let raporData = loadRapor();
+  const siswaAktif = loadSiswa().filter(s=>s.status==="Aktif");
+  const raporData = loadRapor();
 
+  // ambil data dan hitung rata
   let dataRata = siswaAktif.map(s=>{
     const abs = hitungAbsensi(s.nama);
     const r = raporData.find(r=>r.nama===s.nama) || {uts:0, semester:0};
-    const uts = Number(r.uts) || 0;
-    const semester = Number(r.semester) || 0;
-    const rata = (uts + semester)/2;
-    return {...s, ...r, abs, rata};
+    return {...s, abs, uts:r.uts, semester:r.semester, rata:(Number(r.uts)+Number(r.semester))/2};
   });
 
+  // sort berdasarkan rata-rata
   dataRata.sort((a,b)=>b.rata - a.rata);
 
+  // tampilkan tabel
   dataRata.forEach((s,i)=>{
     let warna="";
-    if(i===0) warna="#FFD700";      // emas
-    else if(i===1) warna="#C0C0C0"; // perak
-    else if(i===2) warna="#CD7F32"; // perunggu
+    if(i===0) warna="#FFD700";
+    else if(i===1) warna="#C0C0C0";
+    else if(i===2) warna="#CD7F32";
 
     const tr = document.createElement('tr');
     tr.style.backgroundColor = warna;
@@ -154,9 +155,9 @@ document.getElementById('raporForm').addEventListener('submit', e=>{
     }
   });
 
-  localStorage.setItem('rapor', JSON.stringify(raporData));
+  saveRapor(raporData);
   alert("Rapor tersimpan!");
-  renderRapor();
+  renderRapor(); // render ulang setelah simpan
 });
 
 // ===== Download JSON & Word =====
@@ -168,25 +169,23 @@ function downloadRaporJSON(){
 }
 
 function downloadRaporWord(){
-  let raporData = JSON.parse(localStorage.getItem('rapor')) || [];
+  const raporData = loadRapor();
   if(raporData.length===0){ alert("Belum ada data!"); return; }
 
   let html = `<html xmlns:o='urn:schemas-microsoft-com:office:office'
-        xmlns:w='urn:schemas-microsoft-com:office:word'
-        xmlns='http://www.w3.org/TR/REC-html40'>
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
     <head><meta charset='utf-8'><title>Rapor</title></head><body>
     <h2 style="text-align:center">RAPOR EKSTRA TARI SDI ULUMIYAH AL MAKRUf</h2>
     <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;width:100%;">
       <tr>
         <th>Nama</th><th>Kelas</th><th>Hadir</th><th>Izin</th><th>Sakit</th><th>Alpa</th>
-        <th>Nilai UTS</th><th>Nilai Semester</th><th>Rata-rata</th><th>Ranking</th>
+        <th>UTS</th><th>Semester</th><th>Rata-rata</th><th>Ranking</th>
       </tr>`;
 
   let dataRata = raporData.map(s=>{
     const abs = hitungAbsensi(s.nama);
-    const uts = Number(s.uts) || 0;
-    const semester = Number(s.semester) || 0;
-    const rata = (uts + semester)/2;
+    const rata = (Number(s.uts)+Number(s.semester))/2;
     return {...s, abs, rata};
   });
 
@@ -221,13 +220,6 @@ function downloadRaporWord(){
   const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
   saveAs(blob, "Rapor_Ekstra_Tari.doc");
 }
-
-// ===== Live Sync =====
-function liveSyncRapor(){ renderRapor(); }
-setInterval(liveSyncRapor, 3000);
-window.addEventListener('storage', e=>{
-  if(e.key==='siswa' || e.key==='rapor' || e.key==='absensi'){ renderRapor(); }
-});
 
 // ===== Inisialisasi =====
 renderRapor();
