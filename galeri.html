@@ -36,13 +36,10 @@
 </div>
 
 <div class="container">
-  <div class="hero">
-    <h1>Galeri Ekstra Tari</h1>
-    <div id="galeri-wall" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px"></div>
-  </div>
+  <h1>Galeri Dokumentasi</h1>
+  <div id="galeri-list" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px"></div>
 </div>
 
-<!-- Footer -->
 <div class="footer">
   <strong>SDI Ulumiyah Al Makruf</strong><br>
   Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
@@ -50,19 +47,26 @@
 </div>
 
 <script>
-function loadMedia(){ return JSON.parse(localStorage.getItem('media'))||[]; }
-function renderGaleriWall(){
-  const gal=document.getElementById('galeri-wall');
-  gal.innerHTML="";
-  loadMedia().slice().reverse().forEach(m=>{
+// Load media dari localStorage
+function renderGaleri(){
+  const media = JSON.parse(localStorage.getItem('media'))||[];
+  const container = document.getElementById('galeri-list');
+  container.innerHTML="";
+  media.forEach(g=>{
     const fig=document.createElement('figure');
-    if(m.type==='image') fig.innerHTML=`<img src="${m.url}" alt="media" style="border-radius:8px"><figcaption>${m.url}</figcaption>`;
-    else fig.innerHTML=`<video src="${m.url}" controls style="border-radius:8px;max-width:100%"></video><figcaption>${m.url}</figcaption>`;
-    gal.appendChild(fig);
+    fig.style.margin="0"; fig.style.textAlign="center";
+    if(g.type==='image'){
+      fig.innerHTML=`<img src="${g.url}" style="width:100%;border-radius:8px">`;
+    } else {
+      fig.innerHTML=`<video controls style="width:100%;border-radius:8px"><source src="${g.url}"></video>`;
+    }
+    container.appendChild(fig);
   });
 }
 
-renderGaleriWall();
+// Init
+renderGaleri();
 </script>
+
 </body>
 </html>
