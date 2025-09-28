@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Panel - Ekstra Tari</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="brand">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah">
+    <div class="brand-text">
+      <div class="title">Ekstra Tari</div>
+      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
+    </div>
+  </div>
+  <div>
+    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
+  </div>
+</div>
+
+<!-- Navigasi -->
+<div class="nav">
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="pendaftaran.html">Pendaftaran</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="materi.html">Materi</a>
+  <a href="kontak.html">Kontak</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<!-- Kontainer -->
+<div class="container">
+  <div class="hero">
+    <h1>Admin Panel</h1>
+    <p>Gunakan formulir ini untuk menambah kegiatan, dokumentasi, atau absensi baru. Data akan disimpan di <code>localStorage</code> dan bisa diunduh dalam format JSON.</p>
+
+    <h2>Tambah Kegiatan</h2>
+    <input id="judul" class="input" placeholder="Judul Kegiatan">
+    <input id="tanggal" class="input" type="date">
+    <textarea id="deskripsi" class="input" placeholder="Deskripsi kegiatan"></textarea>
+    <button class="btn" onclick="tambahKegiatan()">Tambah</button>
+    <button class="btn" onclick="downloadJSON()">Download Data</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div>
+    <strong>SDI Ulumiyah Al Makruf</strong><br>
+    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+  </div>
+</div>
+
+<script>
+function tambahKegiatan(){
+  let data=JSON.parse(localStorage.getItem('kegiatan'))||{agenda:[],galeri:[]};
+  data.agenda.push({
+    judul:document.getElementById('judul').value,
+    tanggal:document.getElementById('tanggal').value,
+    deskripsi:document.getElementById('deskripsi').value
+  });
+  localStorage.setItem('kegiatan',JSON.stringify(data));
+  alert("Kegiatan ditambahkan!");
+}
+function downloadJSON(){
+  let data=localStorage.getItem('kegiatan');
+  if(!data){alert("Belum ada data!");return;}
+  let blob=new Blob([data],{type:'application/json'});
+  let url=URL.createObjectURL(blob);
+  let a=document.createElement('a');
+  a.href=url;a.download="kegiatan.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
