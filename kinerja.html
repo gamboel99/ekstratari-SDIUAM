@@ -1,18 +1,127 @@
-<!doctype html><html lang='id'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Kinerja</title><link rel='stylesheet' href='assets/css/style.css'></head><body>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Penilaian Kinerja Guru - Ekstra Tari</title>
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  .table th, .table td { text-align:center; padding:8px; }
+  .input-likert { width:50px; text-align:center; }
+  .btn { padding:6px 12px; margin:4px; cursor:pointer; }
+  #hasilKinerja { margin-top:20px; font-weight:bold; color:green; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
 <div class="header">
-  <div class="brand"><img src="assets/img/logo-sekolah.jpg" alt="logo"><div style="margin-left:8px"><strong style="font-size:18px">Ekstra Tari</strong><div class="small">SDI Ulumiyah Al Makruf</div></div></div>
-  <div style="text-align:right"><img src="assets/img/logo-ekstra.png" alt="logo" style="height:64px;border-radius:8px"></div>
-</div>
-<div class="nav">
-  <a href="index.html">Beranda</a><a href="galeri.html">Galeri</a><a href="pendaftaran.html">Pendaftaran</a><a href="absensi.html">Absensi</a><a href="rapor.html">Rapor</a><a href="kinerja.html">Kinerja</a><a href="materi.html">Materi</a><a href="kontak.html">Kontak</a>
-</div>
-<div class='container'><div class='hero'><h2>Indikator Kinerja Guru</h2><form id='kinerjaForm' onsubmit='tambahKinerjaForm(event)'><label>Nama<select id='kinerjaNama'></select></label><label>Indikator<input id='kinerjaIndikator' class='input'></label><label>Skor<input id='kinerjaSkor' class='input' type='number' min='0' max='5'></label><label>Catatan<textarea id='kinerjaCatatan' class='input'></textarea></label><button class='btn' type='submit'>Tambah Kinerja</button></form><h3 style='margin-top:18px'>Daftar Kinerja</h3><table class='table'><thead><tr><th>No</th><th>Nama</th><th>Indikator</th><th>Skor</th><th>Catatan</th><th>Tanggal</th></tr></thead><tbody id='kinerja-body'></tbody></table><div style='margin-top:12px'><button class='btn' onclick='downloadKinerjaCSV()'>Download CSV</button></div></div></div>
-<div class="footer">
-  <div style="max-width:1000px;margin:0 auto">
-    <strong>SDI Ulumiyah Al Makruf</strong><br>
-    Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
-    Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid) | Website: <a href="https://sdiulumiyahalmakruf.vercel.app/" target="_blank" style="color:var(--gold)">sdiulumiyahalmakruf.vercel.app</a><br>
-    Ikuti kami: <a href="https://www.youtube.com/@SDI.UlumiyahAlmakruf" target="_blank" style="color:var(--gold)">YouTube</a> | <a href="https://www.instagram.com/sdiulumiyahalmakruf/" style="color:var(--gold)" target="_blank">Instagram</a> | <a href="https://www.facebook.com/p/Sdi-Ulumiyah-Al-Makruf-100077475893950/" style="color:var(--gold)" target="_blank">Facebook</a>
+  <div class="brand">
+    <img src="assets/img/logo-sekolah.jpg" alt="logo sekolah" style="height:50px;margin-right:8px;">
+    <div class="brand-text">
+      <div class="title">Ekstra Tari</div>
+      <div class="subtitle">SDI Ulumiyah Al Makruf</div>
+    </div>
+  </div>
+  <div>
+    <img src="assets/img/logo-ekstra.png" alt="logo ekstra" style="height:64px;border-radius:8px">
   </div>
 </div>
-<script src='assets/js/main.js'></script><script src='assets/js/kinerja.js'></script></body></html>
+
+<!-- Navigasi -->
+<div class="nav">
+  <a href="index.html">Beranda</a>
+  <a href="galeri.html">Galeri</a>
+  <a href="pendaftaran.html">Pendaftaran</a>
+  <a href="absensi.html">Absensi</a>
+  <a href="rapor.html">Rapor</a>
+  <a href="kinerja.html">Kinerja</a>
+  <a href="materi.html">Materi</a>
+  <a href="kontak.html">Kontak</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<!-- Kontainer -->
+<div class="container">
+  <div class="hero">
+    <h1>Form Penilaian Kinerja Guru Ekstra Tari</h1>
+    <p>Guru yang dinilai: <strong>Nikmatu Zuhroh</strong></p>
+
+    <form id="kinerjaForm">
+      <label for="namaPenilai">Nama Penilai:</label>
+      <input type="text" id="namaPenilai" class="input" required placeholder="Masukkan nama Anda"><br><br>
+
+      <label for="jabatan">Jabatan/Peran:</label>
+      <select id="jabatan" class="input" required>
+        <option value="">-- Pilih Jabatan --</option>
+        <option value="Guru SDI Ulumiyah Al Makruf">Guru SDI</option>
+        <option value="Kepala Sekolah">Kepala Sekolah</option>
+        <option value="Ketua Yayasan">Ketua Yayasan</option>
+        <option value="Owner">Owner</option>
+      </select><br><br>
+
+      <table class="table" border="1">
+        <thead>
+          <tr>
+            <th>Indikator</th>
+            <th>Bobot (%)</th>
+            <th>Nilai (1-5)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Kedisiplinan</td><td>10</td><td><input type="number" class="input-likert" name="kedisiplinan" min="1" max="5" required></td></tr>
+          <tr><td>Inovasi</td><td>20</td><td><input type="number" class="input-likert" name="inovasi" min="1" max="5" required></td></tr>
+          <tr><td>Prestasi</td><td>20</td><td><input type="number" class="input-likert" name="prestasi" min="1" max="5" required></td></tr>
+          <tr><td>Upgrade Kemampuan Anak</td><td>30</td><td><input type="number" class="input-likert" name="upgrade" min="1" max="5" required></td></tr>
+          <tr><td>Pengelolaan Kelas/Kegiatan</td><td>10</td><td><input type="number" class="input-likert" name="pengelolaan" min="1" max="5" required></td></tr>
+          <tr><td>Kolaborasi & Komunikasi</td><td>5</td><td><input type="number" class="input-likert" name="kolaborasi" min="1" max="5" required></td></tr>
+          <tr><td>Pengembangan Profesional</td><td>3</td><td><input type="number" class="input-likert" name="profesional" min="1" max="5" required></td></tr>
+          <tr><td>Keamanan & Kesehatan</td><td>2</td><td><input type="number" class="input-likert" name="keamanan" min="1" max="5" required></td></tr>
+        </tbody>
+      </table><br>
+
+      <button type="submit" class="btn">Kirim Penilaian via Email</button>
+    </form>
+
+    <div id="hasilKinerja"></div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <strong>SDI Ulumiyah Al Makruf</strong><br>
+  Jl. Arbei Dsn. Jombangan Ds. Tertek, Pare, Kec. Pare, Kab. Kediri, Jawa Timur<br>
+  Email: sdiuam.almakruf@gmail.com | Telp: 085859830350 (Pak Khafid)
+</div>
+
+<script>
+document.getElementById('kinerjaForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const namaPenilai = document.getElementById('namaPenilai').value;
+  const jabatan = document.getElementById('jabatan').value;
+  const form = e.target;
+
+  const bobot = {kedisiplinan:10, inovasi:20, prestasi:20, upgrade:30, pengelolaan:10, kolaborasi:5, profesional:3, keamanan:2};
+  let total=0;
+
+  let pesan = `Penilaian Kinerja Guru: Nikmatu Zuhroh\n`;
+  pesan += `Penilai: ${namaPenilai} (${jabatan})\n\n`;
+
+  for(const key in bobot){
+    const val = Number(form[key].value);
+    total += val * bobot[key]/100;
+    pesan += `${key.charAt(0).toUpperCase()+key.slice(1)}: ${val}\n`;
+  }
+
+  pesan += `\nSkor Total: ${total.toFixed(2)} / 5`;
+
+  document.getElementById('hasilKinerja').innerHTML = `<p>Skor Total: ${total.toFixed(2)}</p><p>Penilaian akan dikirim via email</p>`;
+
+  // kirim email langsung
+  const mailto = `mailto:mitrautamaconsultindo@gmail.com?subject=Penilaian Kinerja Guru Nikmatu Zuhroh&body=${encodeURIComponent(pesan)}`;
+  window.location.href = mailto;
+});
+</script>
+
+</body>
+</html>
