@@ -24,24 +24,23 @@ body {
   text-align:center;
 }
 .header .brand {
-  font-size:20px;
-  font-weight:700;
-  text-shadow:1px 1px 2px rgba(0,0,0,0.3);
   display:flex;
-  flex-direction:column;   /* ditumpuk vertikal */
+  flex-direction:column;   /* tumpuk vertikal */
   align-items:flex-start;
   gap:4px;
 }
-
 .header .brand .title {
-  font-size:22px;
-  font-weight:bold;
+  font-size:26px;          /* lebih besar */
+  font-weight:800;
+  color:#fff;              /* putih bersih */
+  text-shadow:2px 2px 4px rgba(0,0,0,0.6);
 }
-
 .header .brand .subtitle {
-  font-size:14px;
-  font-weight:normal;
-  color:#f0f0f0;
+  font-size:16px;          /* lebih besar dari sebelumnya */
+  font-weight:600;
+  color:#ffeb3b;           /* kuning emas kontras */
+  text-shadow:1px 1px 2px rgba(0,0,0,0.5);
+  letter-spacing:0.5px;
 }
 
 /* Navigasi */
@@ -143,6 +142,8 @@ figure img {width:100%;border-radius:8px}
   h1 {font-size:18px}
   h2 {font-size:16px}
   .header {flex-direction:column;align-items:center}
-  .brand {flex-direction:column}
+  .brand {align-items:center;text-align:center}
+  .header .brand .title {font-size:22px}
+  .header .brand .subtitle {font-size:14px}
   table {font-size:12px}
 }
